@@ -1,4 +1,5 @@
 #include "action.h"
+#include "vector.h"
 
 //executes a function based on id
 void action_execute(int id, char key[255], Vector *db)

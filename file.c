@@ -1,5 +1,8 @@
 //file.c
+#include <stdio.h>
 #include "file.h"
+#include "vector.h"
+
 #define MAXCHAR 1000
 
 char lines[MAXCHAR];

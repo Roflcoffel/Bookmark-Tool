@@ -1,4 +1,5 @@
 #include "option.h"
+#include "vector.h"
 //All commands / options
 
 //Key defines action / name

@@ -1,8 +1,4 @@
 //Simple vector for dicts.
-#define S_SIZE 255
-#define DICT_SIZE 255
-#define INITAL_VECTOR_SIZE 2
-
 #include <ctype.h>
 #include "vector.h"
 
@@ -62,43 +58,59 @@ Dict vector_find(char key[S_SIZE], Vector vect)
 }
 
 //finds the best match;
+//NOTE: right now only matches the first 4 letters
+//which would make searching for the rising... you
+//need to write "the" which also probably matches something else.
+//POSSIBLE FIX: try to cut each key string at a "space" symbol
+//and for each new string match the first 4 characters.
+//so for "the rising shield hero" you can search
+//the, rising, shield and hero.
+//----------------------------------
+//NOTE2: if there is more than 1 identical what to do?
+//just return all identical matches.
+//cannot have a list when doing a change (inc, remove).
+//maybe require id when searching for an item you want to change (inc, remove)
+//and to look up id you do a list search.
+//then the vector match can ignore identicals, just return first best.
 Dict vector_match(char key[S_SIZE], Vector vect)
 {
         int max_match = 4;
-        int matches[vect.size];
+        int matches[vect.size]; //may need sizeof(int) * vect.size?
 
+        //Counts each matching character, and stores the number of matches.
         for(int i = 0; i < vect.size; i++)
         {
-                int cur_matches = 0;
+                int num_matches = 0;
                 
                 for(int j = 0; j <= max_match; j++)
                 {
-                        if(toLower(vect.data[i].key[j]) != toLower(key[j])) {
+                        if(tolower(vect.data[i].key[j]) != tolower(key[j])) {
                                 break;
                         }
-                        
-                        cur_matches++;
+
+                        num_matches++;
 
                         if(j == max_match) {
                                 return vect.data[i];
                         }
                 }
 
-                matches[i] = cur_matches;
+                matches[i] = num_matches;
         }
 
-        int max = matches[0];
-        int best_match_index = 0;
+        //Find largest in matches
+        int cur_largest = matches[0];
+        int best_match = 0;
 
-        for(int i = 0; i < vect.size; i++)
+        for(int i = 1; i < vect.size; i++)
         {
-                if(matches[i] > max) {
-                        best_match_index = i;
-                        max = matches[i];
+                if(matches[i] > cur_largest) {
+                        best_match = i;
+                        cur_largest = matches[i];
                 }        
         }
         
-        return vect.data[best_match_index];
+        return vect.data[best_match];
 }
 
 int vector_find_index(char key[S_SIZE], Vector vect)

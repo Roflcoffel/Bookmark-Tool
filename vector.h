@@ -1,6 +1,10 @@
 #ifndef VECTOR_H_
 #define VECTOR_H_
 
+#define S_SIZE 255
+#define DICT_SIZE 255
+#define INITAL_VECTOR_SIZE 2
+
 typedef union Type
 {
         char STR[S_SIZE];

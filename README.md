@@ -1,30 +1,30 @@
 # Bookmark Tool
 
-A simple C program for storing and retrieving a mark from the terminal.
+A simple C program for storing and retrieving a key:value pair from the terminal.
 
 #### NAME
 bookmark - store a mark tied to a name.
 
 #### SYNOPSIS
-bookmark [OPTION] name:value
+bookmark [COMMAND] name:value
 
 #### DESCRIPTION
-creates a name, value pair that is stored in a simple csv file, list all  
-bookmarks or specified.
+Creates a name, value pair that is stored in a simple csv file.  
+List all bookmarks or search for a specified string.
 
 the *name* is always a string
-the *value* is always a number  
+the *value* is always a number
 
-**list**  
+**list** *[name]*  
 lists all bookmarks created, or the best match for a specified *name*. 
 
-**add**  
+**add** *name:value*  
 adds the specified *name:value* pair to the csv file.
 
-**remove**  
+**remove** *name*  
 removes the specified *name* pair from the csv file.
 
-**inc**  
+**inc** *name*  
 increases the *value* of the provided *name*
 
 ### EXAMPLES
@@ -47,5 +47,3 @@ remove a bookmark
 increase a value of bookmark
 
 	bookmark inc wow
-    
-also remember bookmarks return string can easily be piped to awk and grep.

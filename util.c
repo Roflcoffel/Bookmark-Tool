@@ -1,5 +1,5 @@
 //Hopefully useful functions
-
+#include "util.h"
 
 char * substring(int start, int end, char string[MAX_SIZE])
 {
