@@ -3,12 +3,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "vector.c"
-#include "option.c"
-#include "action.c"
+#include "vector.h"
+#include "option.h"
+#include "action.h"
 //#include "util.c"
 //#include "file.c"
-#include "color.c"
+#include "color.h"
 
 #define USAGE "lots of help text\n"
 

@@ -1,12 +1,10 @@
-#include "option.h"
 #include "vector.h"
+#include "option.h"
 //All commands / options
 
 //Key defines action / name
 //Value defines number of arguments
 //Index of the item defines function id
-Vector options;
-
 void option_init(void)
 {
         options = vector_new();

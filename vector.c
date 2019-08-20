@@ -1,5 +1,9 @@
 //Simple vector for dicts.
 #include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 #include "vector.h"
 
 Type type_new_s(char string[S_SIZE])

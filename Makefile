@@ -1,3 +1,5 @@
+default: vector.o option.o action.o color.o
+	gcc -o bookmark main.c vector.o option.o action.o color.o
 
-default:
-	gcc -o bookmark main.c
+clean:
+	rm -v *.o

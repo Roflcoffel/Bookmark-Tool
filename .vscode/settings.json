@@ -1,6 +1,7 @@
 {
         "files.associations": {
                 "chrono": "c",
-                "limits": "c"
+                "limits": "c",
+                "stdlib.h": "c"
         }
 }
