@@ -31,10 +31,12 @@ Dict dict_new(char key[255], Type value);
 
 Vector vector_new(void);
 void vector_add(Dict dict, Vector *vect);
-Dict vector_find(char key[255], Vector vect);
 Dict vector_match(char key[255], Vector vect);
+Dict vector_find(char key[255], Vector vect);
+Dict vector_find_by_index(int index, Vector vect);
 int vector_find_index(char key[255], Vector vect);
 void vector_remove(char key[255], Vector *vect);
 void vector_destroy(Vector *vect);
+void vector_inc(int index, Vector *vect);
 
 #endif

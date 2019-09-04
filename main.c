@@ -16,21 +16,20 @@ void setTempData(Vector *db);
 
 //TODO for 1.0:
 // 1. UNIT TEST / a sperate program that does just testing.
+// remove union type and only accept int, can not remember the use case for
+// a string string dictionary, and then see where everthing breaks.
 // 1.1 -> best match, 
 // 1.2 -> util.substring, 
 // 1.3 -> util.split
 // test file.c
 // define array string sizes in logical place
-// create a make file
 // makes sure that db always have some data, some function may be confused otherwise (vector_match)
-// set a short name, so its easier to search. (ex. The Rising Sheild Hero = Shield) or just have an id.
+// id will be represented as the index, or may save it in the Dict type.
 // flag for list [name], which will display only the episode number (so it can be piped)
 // change option to command maybe?
 // print current version and help if no COMMAND is provided
 // in README.md example show what the expected output is for each command.
 // padding spaces for action outputs
-// include h files instead of c (think its more proper?)
-// seems to be proper to compile each file in its own vaccum, so each file .c that requires stdio should alsways include it.
 
 // 1.1: 
 // lets add a "next" command

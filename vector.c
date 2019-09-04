@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 
 #include "vector.h"
 
@@ -33,12 +34,15 @@ Dict dict_new(char key[S_SIZE], Type value)
 //Constructor
 Vector vector_new(void)
 {
-        Vector v;
-        v.size = 0;
-        v.capacity = INITAL_VECTOR_SIZE;
-        v.data = malloc(sizeof(Dict) * v.capacity);
+        Vector vect;
+        vect.size = 0; //Acts as an index. / max size
+        vect.capacity = INITAL_VECTOR_SIZE;
+        vect.data = malloc(sizeof(Dict) * vect.capacity);
         
-        return v;
+        //terminate program if malloc can't alocate memory.
+        assert(vect.data != NULL);
+
+        return vect;
 }
 
 void vector_add(Dict dict, Vector *vect)
@@ -46,19 +50,11 @@ void vector_add(Dict dict, Vector *vect)
         if(vect->size >= vect->capacity) {
                 vect->capacity *= 2;
                 vect->data = realloc(vect->data, sizeof(Dict) * vect->capacity);
+
+                //terminate program if realloc can't alocate memory.
+                assert(vect->data != NULL);
         }
         vect->data[vect->size++] = dict;
-}
-
-//find the specified key; NULL object if not found
-Dict vector_find(char key[S_SIZE], Vector vect)
-{
-        for(int i = 0; i < vect.size; i++)
-        {
-                if(strcmp(vect.data[i].key, key) == 0)
-                        return vect.data[i];
-        }
-        return dict_new("NULL", type_new_i(0));
 }
 
 //finds the best match;
@@ -125,10 +121,35 @@ int vector_find_index(char key[S_SIZE], Vector vect)
                         return i;
                 }      
         }
-        printf("Index not found!\n");
-        return -1;
+        return -1; //No index was found
 }
 
+Dict vector_find_by_index(int index, Vector vect)
+{
+        return vect.data[index];
+}
+
+//find the specified key; NULL object if not found
+//requires an exact key, so it is not user friendly.
+Dict vector_find(char key[S_SIZE], Vector vect)
+{
+        int index = vector_find_index(key, vect);
+        if(index == -1)
+                return dict_new("NULL", type_new_i(0));
+        
+        return vector_find_by_index(index, vect);
+}
+
+//This would fail if the union type is STR.
+void vector_inc(int index, Vector *vect)
+{
+        vect->data[index].value.INT++;
+}
+
+//Currently do not remove,
+//only sets the key to NULL and value to 0
+//would need to realloc and recalculate the size and move elements
+//if it does not resize we could run out of memory, and maybe cause more bugs.
 void vector_remove(char key[S_SIZE], Vector *vect)
 {
         int index = vector_find_index(key, *vect);
