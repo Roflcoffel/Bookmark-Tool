@@ -40,6 +40,12 @@ void setTempData(Vector *db);
 // the next command would also serve as a quick reminder
 // the only problem is that next would be more robust with ids (vector index == ids?)
 // this ofc crates a small annoyance where you have to look up the id then you can do execute next
+
+// Recent Idea:
+// instead of searching for a series, it would be pretty easy to assume a serie.
+// so to assume a serie all we need to look at is what the current directory is.
+// and use that as the search.
+// most useful for commands that change the data in db.
 int main(int argc, const char* argv[]) 
 {
         //Initiate all basic commands

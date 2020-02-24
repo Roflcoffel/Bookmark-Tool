@@ -9,4 +9,4 @@ util: ../util.o
 	gcc -o util_tests util_test.c ../util.o
 
 clean:
-	rm -v *.o
+	rm -v ../*.o

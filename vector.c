@@ -159,5 +159,6 @@ void vector_remove(char key[S_SIZE], Vector *vect)
 void vector_destroy(Vector *vect)
 {
         free(vect->data);
+        vect = NULL;
 }
 

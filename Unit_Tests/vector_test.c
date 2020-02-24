@@ -16,7 +16,7 @@ static char*  test_vector_find(void);
 static char*  test_vector_match(void);
 static char*  test_vector_find_index(void);
 static char*  test_vector_remove(void);
-static char*  test_vector_destroy(void); //do not know how to test
+static char*  test_vector_destroy(void); //do not know how to test, maybe try to use the object after?
 
 static char*  all_tests(void);
 static Vector Setup(void);
