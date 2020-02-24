@@ -88,6 +88,7 @@ static char* test_vector_new()
     Vector test_vect = vector_new();
     mu_assert(MSG_vector_new_size, test_vect.size == 0);
     mu_assert(MSG_vector_new_capacity, test_vect.capacity == 2);
+    vector_destroy(&test_vect);
     return 0;
 }
 
@@ -102,6 +103,8 @@ static char* test_vector_add()
     mu_assert(MSG_vector_add_key, strcmp(test_vect.data[0].key,STRING) == 0);
     mu_assert(MSG_vector_add_value, test_vect.data[0].value.INT == VALUE);
     mu_assert(MSG_vector_add_size, test_vect.size == 1);
+    vector_destroy(&test_vect);
+
     return 0;
 }
 
@@ -114,6 +117,7 @@ static char* test_vector_find()
 
     mu_assert(MSG_vector_find, strcmp(found_dict.key, STRING) == 0);
     mu_assert(MSG_vector_find_null, strcmp(null_dict.key, "NULL") == 0);
+    vector_destroy(&test_vect);
 
     return 0;
 }
@@ -131,6 +135,7 @@ static char* test_vector_match()
     mu_assert(MSG_vector_match_string, strcmp(string_dict.key, STRING) == 0);
     mu_assert(MSG_vector_match_tdata, strcmp(data_dict.key, TDATA1) == 0);
     mu_assert(MSG_vector_match_first, strcmp(first_item.key, STRING) == 0);
+    vector_destroy(&test_vect);
 
     return 0;
 }
@@ -144,6 +149,7 @@ static char* test_vector_find_index()
 
     mu_assert(MSG_vector_find_index, test_index == INDEX);
     mu_assert(MSG_vector_find_index_fail, test_not_found == -1);
+    vector_destroy(&test_vect);
 
     return 0;
 }
@@ -156,6 +162,7 @@ static char* test_vector_remove()
 
     vector_remove(STRING, &test_vect);
     mu_assert(MSG_vector_remove, strcmp(test_vect.data[0].key,"NULL") == 0);
+    vector_destroy(&test_vect);
 
     return 0;
 }
