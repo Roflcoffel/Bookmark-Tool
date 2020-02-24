@@ -41,11 +41,8 @@ char ** str_split(char string[MAX_SIZE], char delimiter)
         {
                 if(string[i] == delimiter) 
                 {
-                        char s0[MAX_SIZE] = substring(0,i-1,string);
-                        char s1[MAX_SIZE] = substring(i+1,0,string);
-                        strcpy(str[0], s0);
-                        strcpy(str[1], s1);
-                        free(s0); free(s1);
+                        strcpy(str[0], substring(0,i-1,string));
+                        strcpy(str[1], substring(i+1,0,string));
                         break;
                 }
         }
