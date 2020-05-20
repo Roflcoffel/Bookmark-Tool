@@ -15,7 +15,7 @@
 void setTempData(Vector *db);
 
 //TODO for 1.0:
-// 1. UNIT TEST / a sperate program that does just testing.
+// use valgrind on util to see if there are any memory leaks
 // remove union type and only accept int, can not remember the use case for
 // a string string dictionary, and then see where everthing breaks.
 // 1.1 -> best match, 

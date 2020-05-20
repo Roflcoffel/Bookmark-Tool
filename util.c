@@ -2,6 +2,7 @@
 #include "util.h"
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h> //for printf debugging for now
 
 //Creates a substring from a string adds a null character
 //start       - array start index
@@ -13,18 +14,18 @@ char * substring(int start, int num_of_char, char string[MAX_SIZE])
 
         num_of_char += start;
 
-        if(num_of_char == 0)       num_of_char = strlen(string);
+        if(num_of_char-start == 0) num_of_char = strlen(string);
         if(num_of_char > MAX_SIZE) num_of_char = MAX_SIZE-1;
 
         char * substring = malloc(MAX_SIZE * sizeof(char));
 
         for(int i = start; i < num_of_char; i++)
         {
-                substring[i] = string[i];
+                substring[i-start] = string[i];
         }
 
         substring[num_of_char] = '\0';
-        
+
         return substring;
 }
 
@@ -41,7 +42,7 @@ char ** str_split(char string[MAX_SIZE], char delimiter)
         {
                 if(string[i] == delimiter) 
                 {
-                        strcpy(str[0], substring(0,i-1,string));
+                        strcpy(str[0], substring(0,i,string));
                         strcpy(str[1], substring(i+1,0,string));
                         break;
                 }

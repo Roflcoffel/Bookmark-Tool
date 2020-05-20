@@ -22,6 +22,7 @@
                 "ios": "c",
                 "iterator": "c",
                 "map": "c",
-                "set": "c"
+                "set": "c",
+                "__locale": "c"
         }
 }
