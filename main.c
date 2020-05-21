@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #include "vector.h"
-#include "option.h"
+#include "command.h"
 #include "action.h"
 //#include "util.c"
 //#include "file.c"
@@ -15,21 +15,23 @@
 void setTempData(Vector *db);
 
 //TODO for 1.0:
+//## Memory Leaks ##
 // use valgrind on util to see if there are any memory leaks
-// remove union type and only accept int, can not remember the use case for
-// a string string dictionary, and then see where everthing breaks.
-// 1.1 -> best match, 
-// 1.2 -> util.substring, 
-// 1.3 -> util.split
-// test file.c
+
+//## Fixes ##
 // define array string sizes in logical place
 // makes sure that db always have some data, some function may be confused otherwise (vector_match)
 // id will be represented as the index, or may save it in the Dict type.
+
+//## New Stuff ##
 // flag for list [name], which will display only the episode number (so it can be piped)
-// change option to command maybe?
 // print current version and help if no COMMAND is provided
 // in README.md example show what the expected output is for each command.
 // padding spaces for action outputs
+// best match function
+
+//## Tests ##
+// test file.c
 
 // 1.1: 
 // lets add a "next" command
@@ -49,7 +51,7 @@ void setTempData(Vector *db);
 int main(int argc, const char* argv[]) 
 {
         //Initiate all basic commands
-        option_init();
+        command_init();
         //Read from file or create
         Vector db = vector_new();
         //file_init("db.csv", &db);
@@ -87,9 +89,9 @@ int main(int argc, const char* argv[])
         Dict test = vector_match(arg, db);
         printf("%s\n",test.key);
 
-        //for(int i = 0; i < options.size; i++)
+        //for(int i = 0; i < commands.size; i++)
         //{
-        //        if((strcmp(options.data[i].key,opt) == 0) && (options.data[i].value.INT == arg_count)) {
+        //        if((strcmp(commands.data[i].key,opt) == 0) && (commands.data[i].value.INT == arg_count)) {
         //                action_execute(i, arg, &db);
         //                action_done = true;
         //                break;
@@ -98,30 +100,21 @@ int main(int argc, const char* argv[])
 
         if(!action_done)
         {
-                printf("Invalid options and argument!\n");
+                printf("Invalid commands and argument!\n");
                 return 0;
         }
 
         //Write all changes in the db vector to a file
 
         vector_destroy(&db);
-        vector_destroy(&options);
+        vector_destroy(&commands);
 
         return 0;
 }
 
 void setTempData(Vector *db)
 {
-        vector_add(
-                dict_new("Aishiteruze Baby", type_new_i(25)),
-                db
-        );
-        vector_add(
-                dict_new("The Rising of The Shield Hero", type_new_i(15)),
-                db
-        );
-        vector_add(
-                dict_new("Black Clover",type_new_i(79)),
-                db
-        );
+        vector_add( dict_new("Aishiteruze Baby", 25), db);
+        vector_add( dict_new("The Rising of The Shield Hero", 15), db);
+        vector_add( dict_new("Black Clover", 79), db);
 }

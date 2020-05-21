@@ -7,22 +7,8 @@
 
 #include "vector.h"
 
-Type type_new_s(char string[S_SIZE])
-{
-        Type t;
-        strcpy(t.STR, string);
-        return t;
-}
-
-Type type_new_i(int integer)
-{
-        Type t;
-        t.INT = integer;
-        return t;
-}
-
 //an "empty" dict; Constructor
-Dict dict_new(char key[S_SIZE], Type value)
+Dict dict_new(char key[S_SIZE], int value)
 {
         Dict new;
         strcpy(new.key, key);
@@ -135,15 +121,14 @@ Dict vector_find(char key[S_SIZE], Vector vect)
 {
         int index = vector_find_index(key, vect);
         if(index == -1)
-                return dict_new("NULL", type_new_i(0));
+                return dict_new("NULL", 0);
         
         return vector_find_by_index(index, vect);
 }
 
-//This would fail if the union type is STR.
 void vector_inc(int index, Vector *vect)
 {
-        vect->data[index].value.INT++;
+        vect->data[index].value++;
 }
 
 //Currently do not remove,
@@ -153,7 +138,7 @@ void vector_inc(int index, Vector *vect)
 void vector_remove(char key[S_SIZE], Vector *vect)
 {
         int index = vector_find_index(key, *vect);
-        vect->data[index] = dict_new("NULL", type_new_i(0));
+        vect->data[index] = dict_new("NULL", 0);
 }
 
 void vector_destroy(Vector *vect)

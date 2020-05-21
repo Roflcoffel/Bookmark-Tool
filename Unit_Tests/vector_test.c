@@ -5,9 +5,6 @@
 #include "../vector.h"
 #include "minunit.h"
 
-static char*  test_type_new_s(void);
-static char*  test_type_new_i(void);
-
 static char*  test_dict_new(void);
 static char*  test_vector_new(void);
 
@@ -35,9 +32,6 @@ int tests_run = 0;
 #define MSG_VALUE "5"
 #define MSG_INDEX "2"
 
-#define MSG_type_new_s "Error type_new_s, .STR != "STRING
-#define MSG_type_new_i "Error type_new_i, .INT != "MSG_VALUE
-
 #define MSG_dict_new_key   "Error dict_new, .key != "STRING
 #define MSG_dict_new_value "Error dict_new, .value.INT != "MSG_VALUE
 
@@ -61,24 +55,11 @@ int tests_run = 0;
 #define MSG_vector_remove "Error vector_remove, .data[0] != NULL"
 
 //////////////////////////////////////////////
-
-static char* test_type_new_s() 
-{
-    mu_assert(MSG_type_new_s, strcmp(type_new_s(STRING).STR, STRING) == 0);
-    return 0;
-}
-
-static char* test_type_new_i() 
-{
-    mu_assert(MSG_type_new_i, type_new_i(VALUE).INT == VALUE);
-    return 0;
-}
-
 static char* test_dict_new() 
 {
-    Dict test_dict = dict_new(STRING, type_new_i(VALUE));
+    Dict test_dict = dict_new(STRING, VALUE);
     mu_assert(MSG_dict_new_key, strcmp(test_dict.key, STRING) == 0);
-    mu_assert(MSG_dict_new_value, test_dict.value.INT == VALUE);
+    mu_assert(MSG_dict_new_value, test_dict.value == VALUE);
     return 0;
 }
 
@@ -97,11 +78,11 @@ static char* test_vector_new()
 static char* test_vector_add() 
 {
     Vector test_vect = vector_new();
-    Dict test_dict = dict_new(STRING, type_new_i(VALUE));
+    Dict test_dict = dict_new(STRING, VALUE);
     vector_add(test_dict, &test_vect);
     
     mu_assert(MSG_vector_add_key, strcmp(test_vect.data[0].key,STRING) == 0);
-    mu_assert(MSG_vector_add_value, test_vect.data[0].value.INT == VALUE);
+    mu_assert(MSG_vector_add_value, test_vect.data[0].value == VALUE);
     mu_assert(MSG_vector_add_size, test_vect.size == 1);
     vector_destroy(&test_vect);
 
@@ -172,38 +153,17 @@ static Vector Setup()
 {
     Vector test_vect = vector_new();
 
-    vector_add(
-        dict_new(STRING, type_new_i(VALUE)), 
-        &test_vect
-    );
-    
-    vector_add(
-        dict_new(TDATA1, type_new_i(VALUE)), 
-        &test_vect
-    );
-
-    vector_add(
-        dict_new(TDATA2, type_new_i(VALUE)), 
-        &test_vect
-    );
-
-    vector_add(
-        dict_new(TDATA3, type_new_i(VALUE)), 
-        &test_vect
-    );
-
-    vector_add(
-        dict_new(TDATA4, type_new_i(VALUE)), 
-        &test_vect
-    );
+    vector_add(dict_new(STRING, VALUE), &test_vect);
+    vector_add(dict_new(TDATA1, VALUE), &test_vect);
+    vector_add(dict_new(TDATA2, VALUE), &test_vect);
+    vector_add(dict_new(TDATA3, VALUE), &test_vect);
+    vector_add(dict_new(TDATA4, VALUE), &test_vect);
 
     return test_vect;
 }
 
 static char* all_tests() 
 {
-    mu_run_test(test_type_new_s);
-    mu_run_test(test_type_new_i);
     mu_run_test(test_dict_new);
     mu_run_test(test_vector_new);
     mu_run_test(test_vector_add);

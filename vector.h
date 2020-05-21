@@ -5,16 +5,10 @@
 #define DICT_SIZE 255
 #define INITAL_VECTOR_SIZE 2
 
-typedef union Type
-{
-        char STR[S_SIZE];
-        int INT;
-} Type;
-
 typedef struct Dict
 {
         char key[DICT_SIZE];
-        Type value;
+        int value;
 } Dict;
 
 typedef struct Vector
@@ -24,10 +18,7 @@ typedef struct Vector
         int capacity;   //The maximum capacity
 } Vector;
 
-Type type_new_s(char string[S_SIZE]);
-Type type_new_i(int integer);
-
-Dict dict_new(char key[255], Type value);
+Dict dict_new(char key[255], int value);
 
 Vector vector_new(void);
 void vector_add(Dict dict, Vector *vect);

@@ -35,7 +35,7 @@ void action_list_all(Vector db)
 {
         for(int i = 0; i < db.size; i++)
         {
-                printf("%.20s -> %d\n", db.data[i].key, db.data[i].value.INT);
+                printf("%.20s -> %d\n", db.data[i].key, db.data[i].value);
         }
         
 }
@@ -44,7 +44,7 @@ void action_list_all(Vector db)
 void action_list_by_name(char name[255], Vector db)
 {
         Dict t = vector_find(name, db);
-        printf("%.20s -> %d\n", t.key, t.value.INT);
+        printf("%.20s -> %d\n", t.key, t.value);
 }
 
 //id: 2
@@ -56,9 +56,9 @@ void action_add(char name[255], Vector *db)
         //right side is the *value*
         //wow:1
 
-        Dict pair = dict_new(name, type_new_i(0)); //Temp
+        Dict pair = dict_new(name, 0); //Temp
         vector_add(pair, db);
-        printf("Added:\n    -> %.20s\n    -> %d\n", pair.key, pair.value.INT);
+        printf("Added:\n    -> %.20s\n    -> %d\n", pair.key, pair.value);
 }
 
 //id: 3
@@ -72,6 +72,6 @@ void action_remove(char name[255], Vector *db)
 void action_inc(char name[255], Vector *db)
 {
         int index = vector_find_index(name, *db);
-        db->data[index].value.INT++;
-        printf("Increased:\n    -> %.20s\n    to %d", name, db->data[index].value.INT);
+        db->data[index].value++;
+        printf("Increased:\n    -> %.20s\n    to %d", name, db->data[index].value);
 }
