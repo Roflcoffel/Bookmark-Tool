@@ -31,7 +31,10 @@ void setTempData(Vector *db);
 // best match function
 
 //## Tests ##
+// test vector.c, vector_match got changed.
 // test file.c
+// in the unit test, always print current value and the expected, this can be a verbose setting.
+// on an assert it would be helpful to know both the current value and the expected value.
 
 // 1.1: 
 // lets add a "next" command
@@ -48,6 +51,13 @@ void setTempData(Vector *db);
 // so to assume a serie all we need to look at is what the current directory is.
 // and use that as the search.
 // most useful for commands that change the data in db.
+
+// Vector Remove:
+// Not doing a realloc is fine because of the lifetime of the program, the intended use
+// makes it so that after a command is processed we write to the file and the program terminates.
+// so we will never have more than one "fake" null object in the array, and when we write a null
+// to the file we simply ignore it, just need to make sure that rewrite the whole file when we
+// do a change.
 int main(int argc, const char* argv[]) 
 {
         //Initiate all basic commands
@@ -86,8 +96,8 @@ int main(int argc, const char* argv[])
         bool action_done = false;
 
         //Testing vector_match
-        Dict test = vector_match(arg, db);
-        printf("%s\n",test.key);
+        Vector test = vector_match(arg, db);
+        printf("%s\n",test.data[0].key);
 
         //for(int i = 0; i < commands.size; i++)
         //{

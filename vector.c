@@ -43,23 +43,15 @@ void vector_add(Dict dict, Vector *vect)
         vect->data[vect->size++] = dict;
 }
 
-//finds the best match;
-//NOTE: right now only matches the first 4 letters
-//which would make searching for the rising... you
-//need to write "the" which also probably matches something else.
-//POSSIBLE FIX: try to cut each key string at a "space" symbol
+//Returns 1 item if it matches all 4 letters, if not
+//Returns all item that matches atleast 2 letters.
+//try to cut each key string at a "space" symbol
 //and for each new string match the first 4 characters.
 //so for "the rising shield hero" you can search
 //the, rising, shield and hero.
-//----------------------------------
-//NOTE2: if there is more than 1 identical what to do?
-//just return all identical matches.
-//cannot have a list when doing a change (inc, remove).
-//maybe require id when searching for an item you want to change (inc, remove)
-//and to look up id you do a list search.
-//then the vector match can ignore identicals, just return first best.
-Dict vector_match(char key[S_SIZE], Vector vect)
+Vector vector_match(char key[S_SIZE], Vector vect)
 {
+		Vector new_vect = vector_new();
         int max_match = 4;
         int matches[vect.size]; //may need sizeof(int) * vect.size?
 
@@ -77,26 +69,20 @@ Dict vector_match(char key[S_SIZE], Vector vect)
                         num_matches++;
 
                         if(j == max_match) {
-                                return vect.data[i];
-                        }
+                        	vector_add(vect.data[i], &new_vect);
+							return new_vect;
+						}
                 }
 
                 matches[i] = num_matches;
         }
 
-        //Find largest in matches
-        int cur_largest = matches[0];
-        int best_match = 0;
-
-        for(int i = 1; i < vect.size; i++)
-        {
-                if(matches[i] > cur_largest) {
-                        best_match = i;
-                        cur_largest = matches[i];
-                }        
-        }
-        
-        return vect.data[best_match];
+		for (int i = 0; i < vect.size; i++)
+		{
+			if(matches[i] >= 2) vector_add(vect.data[i], &new_vect);
+		}
+		
+        return new_vect;
 }
 
 int vector_find_index(char key[S_SIZE], Vector vect)
@@ -131,10 +117,7 @@ void vector_inc(int index, Vector *vect)
         vect->data[index].value++;
 }
 
-//Currently do not remove,
-//only sets the key to NULL and value to 0
-//would need to realloc and recalculate the size and move elements
-//if it does not resize we could run out of memory, and maybe cause more bugs.
+//Sets the key and value to NULL and 0
 void vector_remove(char key[S_SIZE], Vector *vect)
 {
         int index = vector_find_index(key, *vect);
