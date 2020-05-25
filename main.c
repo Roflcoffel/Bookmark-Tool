@@ -31,10 +31,7 @@ void setTempData(Vector *db);
 // best match function
 
 //## Tests ##
-// test vector.c, vector_match got changed.
 // test file.c
-// in the unit test, always print current value and the expected, this can be a verbose setting.
-// on an assert it would be helpful to know both the current value and the expected value.
 
 // 1.1: 
 // lets add a "next" command

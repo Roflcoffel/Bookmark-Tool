@@ -56,8 +56,6 @@ int tests_run = 0;
 #define MSG_vector_find_index_fail "Error vector_find_index, should be -1"
 
 #define MSG_vector_remove "Error vector_remove, .data[0] should be NULL"
-
-#define SIZE 255
 //////////////////////////////////////////////
 static char* test_dict_new() 
 {
@@ -208,8 +206,6 @@ static char* all_tests()
     mu_run_test(test_vector_find);
     mu_run_test(test_vector_match);
     mu_run_test(test_vector_find_index);
-    mu_run_test(test_vector_remove);
-    mu_run_test(test_vector_remove);
     mu_run_test(test_vector_remove);
     return 0;
 }
