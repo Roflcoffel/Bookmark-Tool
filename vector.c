@@ -6,6 +6,7 @@
 #include <assert.h>
 
 #include "vector.h"
+#include "util.h"
 
 //an "empty" dict; Constructor
 Dict dict_new(char key[S_SIZE], int value)
@@ -43,45 +44,66 @@ void vector_add(Dict dict, Vector *vect)
         vect->data[vect->size++] = dict;
 }
 
-//Returns 1 item if it matches all 4 letters, if not
+//Returns 1 item if it matches all letters, if not
 //Returns all item that matches atleast 2 letters.
-//try to cut each key string at a "space" symbol
-//and for each new string match the first 4 characters.
-//so for "the rising shield hero" you can search
-//the, rising, shield and hero.
+//If more than one matches all, returns the first found
+//Current problem:
+//if a series only have common words, like "love" then
+//it is not guarenteed that the first instance "love" is
+//the one we want.
+//so to fix this we have to allow, on a full match we still check the rest
+//and return a vector.
+//currently we discard if the length of the strings do not match, can create
+//a test and see how much slower it is to always check all.
 Vector vector_match(char key[S_SIZE], Vector vect)
-{
-		Vector new_vect = vector_new();
-        int max_match = 4;
+{       
+	Vector new_vect = vector_new();
         int matches[vect.size]; //may need sizeof(int) * vect.size?
+
+        int key_len = strlen(key);
 
         //Counts each matching character, and stores the number of matches.
         for(int i = 0; i < vect.size; i++)
         {
+                size_t size = 0;
+                char ** split_vect = multi_str_split(vect.data[i].key, ' ', &size);
+
                 int num_matches = 0;
                 
-                for(int j = 0; j <= max_match; j++)
+                for(int j = 0; j < size; j++)
                 {
-                        if(tolower(vect.data[i].key[j]) != tolower(key[j])) {
-                                break;
+                        int len = strlen(split_vect[j]);
+                        if(len != key_len) continue;
+                        
+                        for(int k = 0; k < len; k++)
+                        {
+                                if(tolower(split_vect[j][k]) != tolower(key[k])) break;
+
+                                num_matches++;
+
+                                //Full Match
+                                if(k == len-1) {
+                                        vector_add(vect.data[i], &new_vect);
+			                return new_vect;
+                                }
                         }
-
-                        num_matches++;
-
-                        if(j == max_match) {
-                        	vector_add(vect.data[i], &new_vect);
-							return new_vect;
-						}
                 }
 
                 matches[i] = num_matches;
         }
 
-		for (int i = 0; i < vect.size; i++)
-		{
-			if(matches[i] >= 2) vector_add(vect.data[i], &new_vect);
-		}
-		
+        for (int i = 0; i < vect.size; i++)
+        {
+                //Matches atleast two letters
+                if(matches[i] >= 2) vector_add(vect.data[i], &new_vect);
+        }
+
+        if(vect.size == 0)
+        {
+                vector_add(dict_new("No Match Found", 0), &new_vect);
+                return new_vect;
+        }
+
         return new_vect;
 }
 

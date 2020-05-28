@@ -31,6 +31,7 @@ void setTempData(Vector *db);
 // best match function
 
 //## Tests ##
+// test vector, vector_match, apparently difficult to do a search that is intuitive.
 // test file.c
 
 // 1.1: 

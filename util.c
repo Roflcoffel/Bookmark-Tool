@@ -1,9 +1,10 @@
 //Hopefully useful functions
-#include "util.h"
 #include <string.h>
 #include <stdlib.h>
+#include <stddef.h>
 #include <stdio.h> //for printf debugging for now
 
+#include "util.h"
 //Creates a substring from a string adds a null character
 //start       - array start index
 //num_of_char - number of total characters, 0 == length of "string";
@@ -58,14 +59,28 @@ char ** str_split(char string[MAX_SIZE], char delimiter)
 //Splits a string at ALL delimiters
 //strings starting or ending with a space are not supported!
 //string    - string you want to split
-//delimiter - the character you want to split at
+//delimiter - the character you want to split at, if the delimiter is not found returns the input in a char **
+//size      - stores the array size in this variable (output)
 //returns   - an array of strings
-char ** multi_str_split(char string[MAX_SIZE], char delimiter)
+char ** multi_str_split(char string[MAX_SIZE], char delimiter, size_t *size)
 {
-        int len = strlen(string);
+        size_t len = strlen(string);
         
         int array_size = count_delimiter(string, delimiter);
+
         char ** str = malloc((array_size+1) * sizeof(char*));
+        //char * str[array_size+1]; test this
+        //char str[array_size+1][MAX_SIZE]; test this
+        //see if all of these work the same way
+        
+        *size = array_size+1;
+
+        if(array_size == 0)
+        {
+                str[0] = malloc(MAX_SIZE * sizeof(char));
+                strcpy(str[0], string);
+                return str;
+        }
 
         int count = 0;
         int start = 0;
@@ -90,7 +105,7 @@ char ** multi_str_split(char string[MAX_SIZE], char delimiter)
 int count_delimiter(char string[MAX_SIZE], char delimiter)
 {
         int count_delimiter = 0;
-        int len = strlen(string);
+        size_t len = strlen(string);
 
         //Skips first and last character
         for(int i = 1; i < len-1; i++)

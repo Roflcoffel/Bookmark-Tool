@@ -1,7 +1,7 @@
 default: vector util
 
-vector: vector.o color.o
-	gcc -g -o vector_tests vector_test.c ../vector.o ../color.o
+vector: vector.o util.o color.o
+	gcc -g -o vector_tests vector_test.c ../vector.o ../util.o ../color.o
 
 util: util.o color.o
 	gcc -g -o util_tests util_test.c ../util.o ../color.o

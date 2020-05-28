@@ -15,11 +15,13 @@ int tests_run = 0;
 
 #define STRING "TEST STRING"
 #define LONG_STRING "TEST LONG STRING"
+#define NO_SPACE "NO_SPACE"
 
 #define EXPECTED_COUNT "2"
 #define EXPECTED0 "TEST"
 #define EXPECTED1 "STRING"
 #define EXPECTED2 "LONG"
+#define EXPECTED_SIZE "3"
 
 #define MSG_test_substring_0 "Error, test_substring s1 should be "EXPECTED0
 #define MSG_test_substring_1 "Error, test_substring s2 should be "EXPECTED1
@@ -30,6 +32,9 @@ int tests_run = 0;
 #define MSG_test_multi_str_split_0 "Error, test_multi_str_split arr[0] should be "EXPECTED0
 #define MSG_test_multi_str_split_1 "Error, test_multi_str_split arr[1] should be "EXPECTED2
 #define MSG_test_multi_str_split_2 "Error, test_multi_str_split arr[2] should be "EXPECTED1
+#define MSG_test_multi_str_split_size "Error, test_multi_str_split size should be "EXPECTED_SIZE
+
+#define MSG_test_multi_str_split_no_space "Error, test_multi_str_split no_space[0] should be "NO_SPACE
 
 #define MSG_test_count_delimiter "Error, test_count_delimiter del_count should be "EXPECTED_COUNT
 
@@ -66,13 +71,21 @@ static char * test_str_split()
 
 static char * test_multi_str_split()
 {
-    char ** arr = multi_str_split(LONG_STRING, ' ');
+    size_t size_arr = 0;
+    char ** arr = multi_str_split(LONG_STRING, ' ', &size_arr);
 
-    printf("arr[0] is %s\narr[1] is %s\narr[2] is %s\nFrom: "LONG_STRING"\n", arr[0], arr[1], arr[2]);
+    printf("size is %d\narr[0] is %s\narr[1] is %s\narr[2] is %s\nFrom: "LONG_STRING"\n", size_arr, arr[0], arr[1], arr[2]);
+    mu_assert(MSG_test_multi_str_split_size, size_arr == atoi(EXPECTED_SIZE));
     mu_assert(MSG_test_multi_str_split_0, strcmp(arr[0],EXPECTED0) == 0);
     mu_assert(MSG_test_multi_str_split_1, strcmp(arr[1],EXPECTED2) == 0);
     mu_assert(MSG_test_multi_str_split_2, strcmp(arr[2],EXPECTED1) == 0);
     free(arr);
+
+    size_t size_no_space = 0;
+    char ** no_space = multi_str_split(NO_SPACE, ' ', &size_no_space);
+    printf("\nsize is %d\nno_space[0] is %s\nFrom: "NO_SPACE"\n", size_no_space, no_space[0]);
+    mu_assert(MSG_test_multi_str_split_no_space, strcmp(no_space[0],NO_SPACE) == 0);
+    free(no_space);
 
     printf("\ntest_multi_str_split ");
     print_color(GREEN, "PASSED\n");
