@@ -14,6 +14,7 @@ List all bookmarks or search for a specified string.
 
 the *name* is always a string
 the *value* is always a number
+the *id* is displayed when listing.
 
 **list** *[name]*  
 lists all bookmarks created, or the best match for a specified *name*. 
@@ -21,11 +22,11 @@ lists all bookmarks created, or the best match for a specified *name*.
 **add** *name:value*  
 adds the specified *name:value* pair to the csv file.
 
-**remove** *name*  
-removes the specified *name* pair from the csv file.
+**remove** *id*  
+removes the specified pair from the csv file.
 
-**inc** *name*  
-increases the *value* of the provided *name*
+**inc** *id*  
+increases the *value* of the pair with *id*
 
 ### EXAMPLES
 list all bookmarks:  
@@ -42,8 +43,8 @@ list a specific bookmark:
     
 remove a bookmark
  
- 	bookmark remove wow
+ 	bookmark remove 1
 
 increase a value of bookmark
 
-	bookmark inc wow
+	bookmark inc 1

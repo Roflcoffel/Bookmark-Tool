@@ -1,9 +1,11 @@
 //Simple vector for dicts.
 #include <ctype.h>
 #include <string.h>
+#include <strings.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <stdbool.h>
 
 #include "vector.h"
 #include "util.h"
@@ -44,23 +46,15 @@ void vector_add(Dict dict, Vector *vect)
         vect->data[vect->size++] = dict;
 }
 
-//Returns 1 item if it matches all letters, if not
-//Returns all item that matches atleast 2 letters.
-//If more than one matches all, returns the first found
-//Current problem:
-//if a series only have common words, like "love" then
-//it is not guarenteed that the first instance "love" is
-//the one we want.
-//so to fix this we have to allow, on a full match we still check the rest
-//and return a vector.
-//currently we discard if the length of the strings do not match, can create
-//a test and see how much slower it is to always check all.
+//Returns all item that matches the key, or matches atleast 2 letters.
+//the 2 letter matches, string must be the same length as the key (may change).
 Vector vector_match(char key[S_SIZE], Vector vect)
 {       
 	Vector new_vect = vector_new();
-        int matches[vect.size]; //may need sizeof(int) * vect.size?
+        int matches[vect.size];
 
         int key_len = strlen(key);
+        bool full_match_found = false;
 
         //Counts each matching character, and stores the number of matches.
         for(int i = 0; i < vect.size; i++)
@@ -84,24 +78,24 @@ Vector vector_match(char key[S_SIZE], Vector vect)
                                 //Full Match
                                 if(k == len-1) {
                                         vector_add(vect.data[i], &new_vect);
-			                return new_vect;
+                                        full_match_found = true;
                                 }
                         }
                 }
 
                 matches[i] = num_matches;
+                free(split_vect);
         }
 
-        for (int i = 0; i < vect.size; i++)
+        //Didn't find a full match, see if we any 2 letter matches.
+        if(full_match_found == false)
         {
-                //Matches atleast two letters
-                if(matches[i] >= 2) vector_add(vect.data[i], &new_vect);
-        }
+                for (int i = 0; i < vect.size; i++)
+                {
+                        if(matches[i] >= 2) vector_add(vect.data[i], &new_vect);
+                }
 
-        if(vect.size == 0)
-        {
-                vector_add(dict_new("No Match Found", 0), &new_vect);
-                return new_vect;
+                if(new_vect.size == 0) vector_add(dict_new("No Match Found", 0), &new_vect);
         }
 
         return new_vect;
@@ -111,7 +105,7 @@ int vector_find_index(char key[S_SIZE], Vector vect)
 {
         for(int i = 0; i < vect.size; i++)
         {
-                if(strcmp(vect.data[i].key,key) == 0) {
+                if(strcasecmp(vect.data[i].key,key) == 0) {
                         return i;
                 }      
         }

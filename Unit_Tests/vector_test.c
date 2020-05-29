@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <assert.h>
 
 #include "../color.h"
@@ -25,11 +26,16 @@ int tests_run = 0;
 #define INDEX 2
 #define STRING "TEST"
 
-#define DATA "DATA"
-#define TDATA1 "DAT_TEST1"
-#define TDATA2 "DAT_TEST2"
-#define TDATA3 "DAT_TEST3"
-#define TDATA4 "TEST4"
+#define MATCH_MISSPELLED "infonete"
+#define MATCH_INFINITE   "infinite"
+#define MATCH_NANOHA     "Nanoha"
+#define MATCH_KON        "k-on!"
+#define NO_MATCH         "No Match Found"
+
+#define TDATA1 "Infinite Dendrogram"
+#define TDATA2 "Infinite Stratos"
+#define TDATA3 "Mahou Shoujo Lyrical Nanoha"
+#define TDATA4 "K-ON!"
 
 #define MSG_VALUE "5"
 #define MSG_INDEX "2"
@@ -44,13 +50,16 @@ int tests_run = 0;
 #define MSG_vector_add_value "Error vector_add, .value should be "MSG_VALUE
 #define MSG_vector_add_size  "Error vector_add, .size should be 1" 
 
-#define MSG_vector_find      "Error vector_find, .key should be "STRING
+#define MSG_vector_find      "Error vector_find, .key should be "MATCH_KON
 #define MSG_vector_find_null "Error vector_find, .key should be NULL"
 
-#define MSG_vector_match_string "Error vector_match, .key should be "STRING
+#define MSG_vector_match_string      "Error vector_match, .key should be "MATCH_NANOHA
 #define MSG_vector_match_string_size "Error vector_match, .size should be 1"
 
-#define MSG_vector_match_tdata  "Error vector_match, .data should be "TDATA1", "TDATA2", "TDATA3
+#define MSG_vector_match_tdata      "Error vector_match, .data should be "TDATA1", "TDATA2
+#define MSG_vector_match_misspelled "Error vector_match, .data should be "TDATA1", "TDATA2
+
+#define MSG_vector_match_not_found "Error vector_match, .key should be "NO_MATCH
 
 #define MSG_vector_find_index      "Error vector_find_index, should be "MSG_INDEX
 #define MSG_vector_find_index_fail "Error vector_find_index, should be -1"
@@ -60,6 +69,7 @@ int tests_run = 0;
 static char* test_dict_new() 
 {
     Dict test_dict = dict_new(STRING, VALUE);
+    printf("CALL dict_new(%s, %d)\n\n", STRING, VALUE);
 
 	printf("key is %s\nvalue is %d\n", test_dict.key, test_dict.value);
 	mu_assert(MSG_dict_new_key, strcmp(test_dict.key, STRING) == 0);
@@ -75,6 +85,7 @@ static char* test_dict_new()
 static char* test_vector_new() 
 {
     Vector test_vect = vector_new();
+    printf("CALL vector_new()\n\n");
 
 	printf("size is %d\ncapacity is %d\n", test_vect.size, test_vect.capacity);
     mu_assert(MSG_vector_new_size, test_vect.size == 0);
@@ -92,6 +103,7 @@ static char* test_vector_add()
     Vector test_vect = vector_new();
     Dict test_dict = dict_new(STRING, VALUE);
     vector_add(test_dict, &test_vect);
+    printf("CALL vector_add( dict_new(%s, %d), %s)\n\n", STRING, VALUE, "&test_vect");
     
 	printf("key is %s\nvalue is %d\nsize is %d\n", test_vect.data[0].key, test_vect.data[0].value, test_vect.size);
     mu_assert(MSG_vector_add_key, strcmp(test_vect.data[0].key,STRING) == 0);
@@ -109,11 +121,13 @@ static char* test_vector_find()
 {
     Vector test_vect = Setup();
     
-    Dict found_dict = vector_find(STRING, test_vect);
+    Dict found_dict = vector_find(MATCH_KON, test_vect);
     Dict null_dict = vector_find("NONE", test_vect);
+    printf("CALL vector_find(%s, %s)\n", MATCH_KON, "test_vect");
+    printf("CALL vector_find(%s, %s)\n\n", "NONE", "test_vect");
 
 	printf("found_dict.key is %s\nnull_dict.key is %s\n", found_dict.key, null_dict.key);
-    mu_assert(MSG_vector_find, strcmp(found_dict.key, STRING) == 0);
+    mu_assert(MSG_vector_find, strcasecmp(found_dict.key, MATCH_KON) == 0);
     mu_assert(MSG_vector_find_null, strcmp(null_dict.key, "NULL") == 0);
     vector_destroy(&test_vect);
 
@@ -127,23 +141,42 @@ static char* test_vector_match()
 {
     Vector test_vect = Setup();
 
-    Vector string_vect = vector_match(STRING, test_vect);
+    //Test one full match
+    Vector string_vect = vector_match(MATCH_NANOHA, test_vect);
+    printf("CALL vector_match(%s, %s)\n\n", MATCH_NANOHA, "test_vect");
 
 	printf("key is %s\nsize is %d\n\n", string_vect.data[0].key, string_vect.size);
-    mu_assert(MSG_vector_match_string, strcmp(string_vect.data[0].key, STRING) == 0);
+    mu_assert(MSG_vector_match_string, strcmp(string_vect.data[0].key, TDATA3) == 0);
 	mu_assert(MSG_vector_match_string_size, string_vect.size == 1);
 
-    Vector data_vect = vector_match(DATA, test_vect);
+    //Test multiple full matches
+    Vector data_vect = vector_match(MATCH_INFINITE, test_vect);
+    printf("CALL vector_match(%s, %s)\n\n", MATCH_INFINITE, "test_vect");
     
-	printf("size is %d\ndata[0].key is %s\ndata[1].key is %s\ndata[2].key is %s\n", data_vect.size, data_vect.data[0].key, data_vect.data[1].key, data_vect.data[2].key);
-	mu_assert(MSG_vector_match_tdata, data_vect.size == 3);
+	printf("data[0].key is %s\ndata[1].key is %s\nsize is %d\n\n", data_vect.data[0].key, data_vect.data[1].key, data_vect.size);
+	mu_assert(MSG_vector_match_tdata, data_vect.size == 2);
 	mu_assert(MSG_vector_match_tdata, strcmp(data_vect.data[0].key, TDATA1) == 0);
     mu_assert(MSG_vector_match_tdata, strcmp(data_vect.data[1].key, TDATA2) == 0);
-    mu_assert(MSG_vector_match_tdata, strcmp(data_vect.data[2].key, TDATA3) == 0);
+
+    //Test misspelled match, matches atleast 2
+    Vector misspelled_vect = vector_match(MATCH_MISSPELLED, test_vect);
+    printf("CALL vector_match(%s, %s)\n\n", MATCH_MISSPELLED, "test_vect");
+
+    printf("data[0].key is %s\ndata[1].key is %s\nsize is %d\n\n", misspelled_vect.data[0].key, misspelled_vect.data[1].key, misspelled_vect.size);
+    mu_assert(MSG_vector_match_misspelled, strcmp(misspelled_vect.data[0].key, TDATA1) == 0);
+    mu_assert(MSG_vector_match_misspelled, strcmp(misspelled_vect.data[1].key, TDATA2) == 0);
+
+    //Test no matches
+    Vector no_vect = vector_match(NO_MATCH, test_vect);
+    printf("CALL vector_match(%s, %s)\n\n", NO_MATCH, "test_vect");
+
+    printf("key is %s\nsize is %d\n\n", no_vect.data[0].key, no_vect.size);
+    mu_assert(MSG_vector_match_not_found, strcmp(no_vect.data[0].key, NO_MATCH) == 0);
 
 	vector_destroy(&string_vect);
 	vector_destroy(&data_vect);
 	vector_destroy(&test_vect);
+    vector_destroy(&no_vect);
 
 	printf("\ntest_vector_match ");
 	print_color(GREEN, "PASSED\n\n");
@@ -157,6 +190,8 @@ static char* test_vector_find_index()
 
     int test_index = vector_find_index(TDATA2, test_vect);
     int test_not_found = vector_find_index("FAIL", test_vect);
+    printf("CALL vector_find_index(%s, %s)\n", TDATA2, "test_vect");
+    printf("CALL vector_find_index(%s, %s)\n\n", "FAIL", "test_vect");
 
 	printf("index is %d\nnot_found is %d\n", test_index, test_not_found);
     mu_assert(MSG_vector_find_index, test_index == INDEX);
@@ -173,6 +208,7 @@ static char* test_vector_remove()
 {
     Vector test_vect = Setup();
     vector_remove(STRING, &test_vect);
+    printf("CALL vector_remove(%s, %s)\n\n", STRING, "&test_vect");
 
 	printf("key is %s\n", test_vect.data[0].key);
     mu_assert(MSG_vector_remove, strcmp(test_vect.data[0].key,"NULL") == 0);
