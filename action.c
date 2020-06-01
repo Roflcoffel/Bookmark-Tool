@@ -1,10 +1,11 @@
 #include <stdio.h>
 
+#include "size.h"
 #include "vector.h"
 #include "action.h"
 
 //executes a function based on id
-void action_execute(int id, char key[255], Vector *db)
+void action_execute(int id, char key[S_SIZE], Vector *db)
 {
         switch(id)
         {
@@ -41,14 +42,14 @@ void action_list_all(Vector db)
 }
 
 //id: 1
-void action_list_by_name(char name[255], Vector db)
+void action_list_by_name(char name[S_SIZE], Vector db)
 {
         Dict t = vector_find(name, db);
         printf("%.20s -> %d\n", t.key, t.value);
 }
 
 //id: 2
-void action_add(char name[255], Vector *db)
+void action_add(char name[S_SIZE], Vector *db)
 {
         //Create a dict from the name;
         //it should contain a : as delimiter.
@@ -62,16 +63,16 @@ void action_add(char name[255], Vector *db)
 }
 
 //id: 3
-void action_remove(char name[255], Vector *db)
+void action_remove(char name[S_SIZE], Vector *db)
 {
         vector_remove(name, db);
         printf("Removed:\n    -> %.20s\n", name);
 }
 
 //id: 4
-void action_inc(char name[255], Vector *db)
+void action_inc(char name[S_SIZE], Vector *db)
 {
         int index = vector_find_index(name, *db);
-        db->data[index].value++;
+        db->data[index].value++; // += 1 ?
         printf("Increased:\n    -> %.20s\n    to %d", name, db->data[index].value);
 }

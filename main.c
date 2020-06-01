@@ -3,82 +3,68 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "config.h"
+#include "size.h"
+
 #include "vector.h"
 #include "command.h"
 #include "action.h"
-//#include "util.c"
-//#include "file.c"
+#include "util.h"
+#include "file.h"
 #include "color.h"
 
 #define USAGE "lots of help text\n"
+#define FULLPATH PATH FILENAME
 
-void setTempData(Vector *db);
+void set_default(Vector *db);
 
 //TODO for 1.0:
-//## Memory Leaks ##
-// use valgrind on util to see if there are any memory leaks
-
-//## Fixes ##
-// define array string sizes in logical place
+// define array string sizes in logical place (should exist in size.h)
 // makes sure that db always have some data, some function may be confused otherwise (vector_match)
-// id will be represented as the index, or may save it in the Dict type.
-
-//## New Stuff ##
-// flag for list [name], which will display only the episode number (so it can be piped)
 // print current version and help if no COMMAND is provided
 // in README.md example show what the expected output is for each command.
 // padding spaces for action outputs
-// best match function
 
-//## Tests ##
-// test vector, vector_match, apparently difficult to do a search that is intuitive.
-// test file.c
+//## FLAGS ##
+//--dirkey  - Use the current dir as the key
+//--value   - only display the value of the pair
+//--key     - only display the key of the pair
+
+//## Memory Leaks ##
+// use valgrind on (vector / util / file).
 
 // 1.1: 
-// lets add a "next" command
-// which all "next" does is print the next episode number in a series. (cur+1)
-// and with a simple bash function call vlc $(sel.sh $(bookmark next $serie)) 
-// would play the next episode.
-// sel.sh can be included in the project as an example usage of next.
-// the next command would also serve as a quick reminder
-// the only problem is that next would be more robust with ids (vector index == ids?)
-// this ofc crates a small annoyance where you have to look up the id then you can do execute next
+// instead of a next command:
+// Add a next bash script, with this vlc $(sel.sh $(( $(bookmark list serie_id --value)+1 )))
+// and at the end, bookmark inc serie_id
 
-// Recent Idea:
-// instead of searching for a series, it would be pretty easy to assume a serie.
-// so to assume a serie all we need to look at is what the current directory is.
-// and use that as the search.
-// most useful for commands that change the data in db.
-
-// Vector Remove:
-// Not doing a realloc is fine because of the lifetime of the program, the intended use
-// makes it so that after a command is processed we write to the file and the program terminates.
-// so we will never have more than one "fake" null object in the array, and when we write a null
-// to the file we simply ignore it, just need to make sure that rewrite the whole file when we
-// do a change.
 int main(int argc, const char* argv[]) 
 {
         //Initiate all basic commands
         command_init();
-        //Read from file or create
+        
         Vector db = vector_new();
-        //file_init("db.csv", &db);
-        setTempData(&db);
-
+        Vector default_db = vector_new();
+        
+        set_default(&default_db);
+        
+        //Read from file or create
+        file_init(FULLPATH, &db, default_db);
+        
         if(argc <= 1) {
                 printf(USAGE);
                 return 0;
         }
 
         //User option (list, add, remove, inc)
-        char opt[255];
+        char opt[S_SIZE];
         strcpy(opt, argv[1]);
 
         print_color(BLUE, "option: ");
         printf("%s\n", opt);
 
         //User argument (key name);
-        char arg[255];
+        char arg[S_SIZE];
 
         //strcmp return 1 or -1 when the string do not match
         if(argc >= 3 && strcmp("NULL", argv[2]) != 0) {
@@ -92,10 +78,6 @@ int main(int argc, const char* argv[])
         printf("%d\n",arg_count);
 
         bool action_done = false;
-
-        //Testing vector_match
-        Vector test = vector_match(arg, db);
-        printf("%s\n",test.data[0].key);
 
         //for(int i = 0; i < commands.size; i++)
         //{
@@ -115,14 +97,13 @@ int main(int argc, const char* argv[])
         //Write all changes in the db vector to a file
 
         vector_destroy(&db);
+        vector_destroy(&default_db);
         vector_destroy(&commands);
 
         return 0;
 }
 
-void setTempData(Vector *db)
+void set_default(Vector *db)
 {
-        vector_add( dict_new("Aishiteruze Baby", 25), db);
-        vector_add( dict_new("The Rising of The Shield Hero", 15), db);
-        vector_add( dict_new("Black Clover", 79), db);
+        vector_add(dict_new("default",0), db);
 }

@@ -13,5 +13,5 @@
         //reset colour
         #define RESET   "\033[0m"
 
-        void print_color(char color[8], char text[255]);
+        void print_color(char color[8], char text[S_SIZE]);
 #endif

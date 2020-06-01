@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <stdbool.h>
 
+#include "size.h"
 #include "vector.h"
 #include "util.h"
 
