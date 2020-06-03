@@ -10,6 +10,7 @@ void command_init(void)
     
         vector_add( dict_new("list",   0), &commands );
         vector_add( dict_new("list",   1), &commands );
+        vector_add( dict_new("list",   2), &commands );
         vector_add( dict_new("add",    1), &commands );
         vector_add( dict_new("remove", 1), &commands );
         vector_add( dict_new("inc",    1), &commands );

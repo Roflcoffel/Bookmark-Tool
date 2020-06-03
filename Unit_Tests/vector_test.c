@@ -121,8 +121,11 @@ static char* test_vector_find()
 {
     Vector test_vect = Setup();
     
-    Dict found_dict = vector_find(MATCH_KON, test_vect);
-    Dict null_dict = vector_find("NONE", test_vect);
+    int index_kon;
+    int index_none;
+
+    Dict found_dict = vector_find(MATCH_KON, test_vect, &index_kon);
+    Dict null_dict = vector_find("NONE", test_vect, &index_none);
     printf("CALL vector_find(%s, %s)\n", MATCH_KON, "test_vect");
     printf("CALL vector_find(%s, %s)\n\n", "NONE", "test_vect");
 

@@ -3,9 +3,11 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdio.h> //for printf debugging for now
+#include <stdbool.h>
 
 #include "size.h"
 #include "util.h"
+#include "vector.h"
 //Creates a substring from a string adds a null character
 //start       - array start index
 //num_of_char - number of total characters, 0 == length of "string";
@@ -118,4 +120,9 @@ int count_delimiter(char string[S_SIZE], char delimiter)
         }
 
         return count_delimiter;
+}
+
+bool valid_id(int index, Vector db)
+{
+        return index <= db.size && index >= 0 ? true : false;
 }

@@ -13,22 +13,32 @@
 #include "file.h"
 #include "color.h"
 
-#define USAGE "lots of help text\n"
+#define VERSION "Bookmark - 0.9\n"
+#define USAGE "Usage: bookmark [COMMAND] key[:value]\n\n" \
+              "COMMANDS:\n" \
+              "    list   - [name]     ; list all or a specified pair, also displays id\n" \
+              "    add    - name:value ; creates a new name:value pair\n" \
+              "    remove - id         ; remove the pair with the provided id\n" \
+              "    inc    - id         ; increases the value of the pair with the povided id\n\n" \
+              "FLAGS:\n" \
+              "    list --dir_as_name  ; instead of providing a name use the current dir as the name\n" \
+              "    list --value        ; returns only the value of the pair\n\n" \
+              "NOTES:\n" \
+              "    [] means optional\n" \
+              "    no command = list\n" \
+              "    flags are only useable with list\n"
+
 #define FULLPATH PATH FILENAME
 
 void set_default(Vector *db);
 
 //TODO for 1.0:
-// define array string sizes in logical place (should exist in size.h)
-// makes sure that db always have some data, some function may be confused otherwise (vector_match)
-// print current version and help if no COMMAND is provided
+// error checking for str_split, either pass in bool for status, or return failed in char*
+// valid_id maybe should be a function inside of vector.c instead of util.c
+// Test vector_find, added argument
 // in README.md example show what the expected output is for each command.
 // padding spaces for action outputs
-
-//## FLAGS ##
-//--dirkey  - Use the current dir as the key
-//--value   - only display the value of the pair
-//--key     - only display the key of the pair
+// implement the flags
 
 //## Memory Leaks ##
 // use valgrind on (vector / util / file).
@@ -37,6 +47,10 @@ void set_default(Vector *db);
 // instead of a next command:
 // Add a next bash script, with this vlc $(sel.sh $(( $(bookmark list serie_id --value)+1 )))
 // and at the end, bookmark inc serie_id
+
+// if we save the index of the null object, we could simply skip it when writing the file
+// but we need to pass around more arguments.
+// action_remove could return the index with an argument?
 
 int main(int argc, const char* argv[]) 
 {
@@ -50,6 +64,8 @@ int main(int argc, const char* argv[])
         
         //Read from file or create
         file_init(FULLPATH, &db, default_db);
+
+        printf("FULLPATH: %s", FULLPATH);
         
         if(argc <= 1) {
                 printf(USAGE);
@@ -57,22 +73,26 @@ int main(int argc, const char* argv[])
         }
 
         //User option (list, add, remove, inc)
-        char opt[S_SIZE];
-        strcpy(opt, argv[1]);
+        char cmd[S_SIZE];
+        strcpy(cmd, argv[1]);
 
-        print_color(BLUE, "option: ");
-        printf("%s\n", opt);
+        print_color(BLUE, "Command: ");
+        printf("%s\n", cmd);
 
-        //User argument (key name);
+        //User data input string
         char arg[S_SIZE];
 
-        //strcmp return 1 or -1 when the string do not match
+        //strcmp return 1 or -1 when the strings do not match
         if(argc >= 3 && strcmp("NULL", argv[2]) != 0) {
               strcpy(arg, argv[2]);
               print_color(BLUE, "argument: ");
               printf("%s\n", arg);
         }
-        
+
+        //bookmark list --dir_as_name
+        //here check if arg is --dir_as_name, and if it is call a function which gets the dir, and use that as arg
+        bool arg_is_dirname = false;
+
         int arg_count = argc - 2; //Discard filename and option
         print_color(BLUE, "argument count: ");
         printf("%d\n",arg_count);
@@ -81,7 +101,7 @@ int main(int argc, const char* argv[])
 
         //for(int i = 0; i < commands.size; i++)
         //{
-        //        if((strcmp(commands.data[i].key,opt) == 0) && (commands.data[i].value.INT == arg_count)) {
+        //        if((strcmp(commands.data[i].key,cmd) == 0) && (commands.data[i].value.INT == arg_count)) {
         //                action_execute(i, arg, &db);
         //                action_done = true;
         //                break;

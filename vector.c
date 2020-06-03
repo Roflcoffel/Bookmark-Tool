@@ -120,13 +120,13 @@ Dict vector_find_by_index(int index, Vector vect)
 
 //find the specified key; NULL object if not found
 //requires an exact key, so it is not user friendly.
-Dict vector_find(char key[S_SIZE], Vector vect)
+Dict vector_find(char key[S_SIZE], Vector vect, int *index)
 {
-        int index = vector_find_index(key, vect);
-        if(index == -1)
+        int *index = vector_find_index(key, vect);
+        if(*index == -1)
                 return dict_new("NULL", 0);
         
-        return vector_find_by_index(index, vect);
+        return vector_find_by_index(*index, vect);
 }
 
 void vector_inc(int index, Vector *vect)
@@ -135,9 +135,8 @@ void vector_inc(int index, Vector *vect)
 }
 
 //Sets the key and value to NULL and 0
-void vector_remove(char key[S_SIZE], Vector *vect)
+void vector_remove(int index, Vector *vect)
 {
-        int index = vector_find_index(key, *vect);
         vect->data[index] = dict_new("NULL", 0);
 }
 

@@ -23,6 +23,9 @@
                 "iterator": "c",
                 "map": "c",
                 "set": "c",
-                "__locale": "c"
+                "__locale": "c",
+                "__node_handle": "c",
+                "typeindex": "c",
+                "typeinfo": "c"
         }
 }

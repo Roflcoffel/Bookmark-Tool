@@ -20,7 +20,8 @@ void file_init(char filename[S_FILENAME], Vector *db, Vector default_db)
         }
         else {
                 file_write(filename, default_db);
-                db = &default_db; //db should now point to default_db
+                vector_destroy(db);
+                db = &default_db;   //db should now point to default_db
         }
 }
 
@@ -53,7 +54,8 @@ void vector_to_file(FILE *file, Vector db)
 {
         for (int i = 0; i < db.size; i++)
         {
-                fprintf(file, "%s,%d\n", db.data[i].key, db.data[i].value);
+                if(strcmp("NULL", db.data[i].key) != 0)
+                        fprintf(file, "%s,%d\n", db.data[i].key, db.data[i].value);
         }
         fclose(file);
 }
