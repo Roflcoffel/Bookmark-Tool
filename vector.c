@@ -146,3 +146,7 @@ void vector_destroy(Vector *vect)
         vect = NULL;
 }
 
+bool valid_id(int index, Vector db)
+{
+        return index <= db.size && index >= 0 ? true : false;
+}

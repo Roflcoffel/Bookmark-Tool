@@ -7,7 +7,6 @@
 
 #include "size.h"
 #include "util.h"
-#include "vector.h"
 //Creates a substring from a string adds a null character
 //start       - array start index
 //num_of_char - number of total characters, 0 == length of "string";
@@ -36,7 +35,7 @@ char * substring(int start, int num_of_char, char string[S_SIZE])
 
 //Splits a string at a delimiter in two
 //string    - string you want to split
-//delimiter - the character to split at
+//delimiter - the character to split at, if a delimter is not found returns the input in char **
 //return    - an array with two strings
 char ** str_split(char string[S_SIZE], char delimiter)
 {
@@ -46,15 +45,20 @@ char ** str_split(char string[S_SIZE], char delimiter)
         str[0] = malloc(S_SIZE * sizeof(char));
         str[1] = malloc(S_SIZE * sizeof(char));
 
+        bool delimter_found = false;
+
         for(int i = 0; i < len; i++)
         {
                 if(string[i] == delimiter) 
                 {
+                        delimter_found = true;
                         strcpy(str[0], substring(0,i,string));
                         strcpy(str[1], substring(i+1,0,string));
                         break;
                 }
         }
+
+        if(delimter_found == false) strcpy(str[0], string);
 
         return str;
 }
@@ -120,9 +124,4 @@ int count_delimiter(char string[S_SIZE], char delimiter)
         }
 
         return count_delimiter;
-}
-
-bool valid_id(int index, Vector db)
-{
-        return index <= db.size && index >= 0 ? true : false;
 }

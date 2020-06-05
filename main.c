@@ -33,12 +33,10 @@
 void set_default(Vector *db);
 
 //TODO for 1.0:
-// error checking for str_split, either pass in bool for status, or return failed in char*
-// valid_id maybe should be a function inside of vector.c instead of util.c
-// Test vector_find, added argument
+// Test vector_find, added argument, Test str_split, added no delimter case
+// Test the main program
 // in README.md example show what the expected output is for each command.
 // padding spaces for action outputs
-// implement the flags
 
 //## Memory Leaks ##
 // use valgrind on (vector / util / file).
@@ -47,10 +45,6 @@ void set_default(Vector *db);
 // instead of a next command:
 // Add a next bash script, with this vlc $(sel.sh $(( $(bookmark list serie_id --value)+1 )))
 // and at the end, bookmark inc serie_id
-
-// if we save the index of the null object, we could simply skip it when writing the file
-// but we need to pass around more arguments.
-// action_remove could return the index with an argument?
 
 int main(int argc, const char* argv[]) 
 {

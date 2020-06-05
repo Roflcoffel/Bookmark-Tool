@@ -27,5 +27,6 @@ int vector_find_index(char key[S_SIZE], Vector vect);
 void vector_remove(int index, Vector *vect);
 void vector_destroy(Vector *vect);
 void vector_inc(int index, Vector *vect);
+bool valid_id(int index, Vector db);
 
 #endif
