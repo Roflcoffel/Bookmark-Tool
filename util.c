@@ -125,3 +125,23 @@ int count_delimiter(char string[S_SIZE], char delimiter)
 
         return count_delimiter;
 }
+
+//finds and replaces all delimters in a string with the new_delimiter
+//string        - string to replace the char in
+//delimiter     - current delimiter, will be replaced
+//new_delimiter - the new delimiter
+//returns       - a modified input string
+char * char_replace(char string[S_SIZE], char delimiter, char new_delimiter)
+{
+        size_t len = strlen(string);
+
+        for(int i = 0; i < len; i++)
+        {
+                if(string[i] == delimiter)
+                {
+                        string[i] = new_delimiter;
+                }
+        }
+
+        return string;
+}

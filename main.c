@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 #include "config.h"
 #include "size.h"
@@ -33,8 +34,9 @@
 void set_default(Vector *db);
 
 //TODO for 1.0:
-// Test vector_find, added argument, Test str_split, added no delimter case
+// RUN TESTS
 // Test the main program
+// implement dir_as_name flag
 // in README.md example show what the expected output is for each command.
 // padding spaces for action outputs
 
@@ -62,12 +64,13 @@ int main(int argc, const char* argv[])
         printf("FULLPATH: %s", FULLPATH);
         
         if(argc <= 1) {
-                printf(USAGE);
+                printf(VERSION USAGE);
                 return 0;
         }
 
         //User option (list, add, remove, inc)
         char cmd[S_SIZE];
+        int cmd_id;
         strcpy(cmd, argv[1]);
 
         print_color(BLUE, "Command: ");
@@ -83,24 +86,35 @@ int main(int argc, const char* argv[])
               printf("%s\n", arg);
         }
 
-        //bookmark list --dir_as_name
-        //here check if arg is --dir_as_name, and if it is call a function which gets the dir, and use that as arg
         bool arg_is_dirname = false;
+        char cwd[S_SIZE];
+
+        //Check for the dir flag, and replace arg with cwd
+        if(strcmp("--dir_as_name", arg) == 0) {
+                if (getcwd(cwd, sizeof(cwd)) != NULL) {
+                        arg_is_dirname = true;
+                        strcpy(arg, cwd);
+                } 
+        }
+
+        printf("ARG: %s", arg);
 
         int arg_count = argc - 2; //Discard filename and option
         print_color(BLUE, "argument count: ");
-        printf("%d\n",arg_count);
 
         bool action_done = false;
 
-        //for(int i = 0; i < commands.size; i++)
-        //{
-        //        if((strcmp(commands.data[i].key,cmd) == 0) && (commands.data[i].value.INT == arg_count)) {
-        //                action_execute(i, arg, &db);
-        //                action_done = true;
-        //                break;
-        //        }
-        //}
+        /*
+        for(int i = 0; i < commands.size; i++)
+        {
+                if((strcmp(commands.data[i].key,cmd) == 0) && (commands.data[i].value == arg_count)) {
+                       action_execute(i, arg, arg_is_dirname, &db);
+                       cmd_id = i;
+                       action_done = true;
+                       break;
+                }
+        }
+        */
 
         if(!action_done)
         {
@@ -108,7 +122,10 @@ int main(int argc, const char* argv[])
                 return 0;
         }
 
-        //Write all changes in the db vector to a file
+        //check if we need to update the file!
+        //list       ids: 0, 1, 2
+        //add,rm,inc ids: 3, 4, 5
+        //if(cmd_id >= 3) file_write(FULLPATH, db);
 
         vector_destroy(&db);
         vector_destroy(&default_db);

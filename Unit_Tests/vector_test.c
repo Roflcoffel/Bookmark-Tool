@@ -2,7 +2,9 @@
 #include <string.h>
 #include <strings.h>
 #include <assert.h>
+#include <stdbool.h>
 
+#include "../size.h"
 #include "../color.h"
 #include "../vector.h"
 #include "minunit.h"
@@ -23,7 +25,11 @@ static Vector Setup(void);
 int tests_run = 0;
 
 #define VALUE 5
+#define MSG_VALUE "5"
+
 #define INDEX 2
+#define MSG_INDEX "2"
+
 #define STRING "TEST"
 
 #define MATCH_MISSPELLED "infonete"
@@ -32,13 +38,16 @@ int tests_run = 0;
 #define MATCH_KON        "k-on!"
 #define NO_MATCH         "No Match Found"
 
-#define TDATA1 "Infinite Dendrogram"
-#define TDATA2 "Infinite Stratos"
-#define TDATA3 "Mahou Shoujo Lyrical Nanoha"
-#define TDATA4 "K-ON!"
+#define SERIE_0 "Infinite Dendrogram"
+#define SERIE_1 "Infinite Stratos"
+#define SERIE_2 "Mahou Shoujo Lyrical Nanoha"
+#define SERIE_3 "K-ON!"
 
-#define MSG_VALUE "5"
-#define MSG_INDEX "2"
+#define EXPECTED_INDEX_KON 4
+#define EXPECTED_INDEX_KON_MSG "4"
+
+#define EXPECTED_INDEX_NONE -1
+#define EXPECTED_INDEX_NONE_MSG "-1" 
 
 #define MSG_dict_new_key   "Error dict_new, .key should be "STRING
 #define MSG_dict_new_value "Error dict_new, .value should be "MSG_VALUE
@@ -51,13 +60,16 @@ int tests_run = 0;
 #define MSG_vector_add_size  "Error vector_add, .size should be 1" 
 
 #define MSG_vector_find      "Error vector_find, .key should be "MATCH_KON
+#define MSG_vector_find_kon  "Error vector_find, index should be "EXPECTED_INDEX_KON_MSG
+
 #define MSG_vector_find_null "Error vector_find, .key should be NULL"
+#define MSG_vector_find_none "Error vector_find, index shoulb be "EXPECTED_INDEX_NONE_MSG
 
 #define MSG_vector_match_string      "Error vector_match, .key should be "MATCH_NANOHA
 #define MSG_vector_match_string_size "Error vector_match, .size should be 1"
 
-#define MSG_vector_match_tdata      "Error vector_match, .data should be "TDATA1", "TDATA2
-#define MSG_vector_match_misspelled "Error vector_match, .data should be "TDATA1", "TDATA2
+#define MSG_vector_match_tdata      "Error vector_match, .data should be "SERIE_0", "SERIE_1
+#define MSG_vector_match_misspelled "Error vector_match, .data should be "SERIE_0", "SERIE_1
 
 #define MSG_vector_match_not_found "Error vector_match, .key should be "NO_MATCH
 
@@ -131,7 +143,9 @@ static char* test_vector_find()
 
 	printf("found_dict.key is %s\nnull_dict.key is %s\n", found_dict.key, null_dict.key);
     mu_assert(MSG_vector_find, strcasecmp(found_dict.key, MATCH_KON) == 0);
+    mu_assert(MSG_vector_find_kon, index_kon == EXPECTED_INDEX_KON);
     mu_assert(MSG_vector_find_null, strcmp(null_dict.key, "NULL") == 0);
+    mu_assert(MSG_vector_find_none, index_none == EXPECTED_INDEX_NONE);
     vector_destroy(&test_vect);
 
 	printf("\ntest_vector_find ");
@@ -149,7 +163,7 @@ static char* test_vector_match()
     printf("CALL vector_match(%s, %s)\n\n", MATCH_NANOHA, "test_vect");
 
 	printf("key is %s\nsize is %d\n\n", string_vect.data[0].key, string_vect.size);
-    mu_assert(MSG_vector_match_string, strcmp(string_vect.data[0].key, TDATA3) == 0);
+    mu_assert(MSG_vector_match_string, strcmp(string_vect.data[0].key, SERIE_2) == 0);
 	mu_assert(MSG_vector_match_string_size, string_vect.size == 1);
 
     //Test multiple full matches
@@ -158,16 +172,16 @@ static char* test_vector_match()
     
 	printf("data[0].key is %s\ndata[1].key is %s\nsize is %d\n\n", data_vect.data[0].key, data_vect.data[1].key, data_vect.size);
 	mu_assert(MSG_vector_match_tdata, data_vect.size == 2);
-	mu_assert(MSG_vector_match_tdata, strcmp(data_vect.data[0].key, TDATA1) == 0);
-    mu_assert(MSG_vector_match_tdata, strcmp(data_vect.data[1].key, TDATA2) == 0);
+	mu_assert(MSG_vector_match_tdata, strcmp(data_vect.data[0].key, SERIE_0) == 0);
+    mu_assert(MSG_vector_match_tdata, strcmp(data_vect.data[1].key, SERIE_1) == 0);
 
     //Test misspelled match, matches atleast 2
     Vector misspelled_vect = vector_match(MATCH_MISSPELLED, test_vect);
     printf("CALL vector_match(%s, %s)\n\n", MATCH_MISSPELLED, "test_vect");
 
     printf("data[0].key is %s\ndata[1].key is %s\nsize is %d\n\n", misspelled_vect.data[0].key, misspelled_vect.data[1].key, misspelled_vect.size);
-    mu_assert(MSG_vector_match_misspelled, strcmp(misspelled_vect.data[0].key, TDATA1) == 0);
-    mu_assert(MSG_vector_match_misspelled, strcmp(misspelled_vect.data[1].key, TDATA2) == 0);
+    mu_assert(MSG_vector_match_misspelled, strcmp(misspelled_vect.data[0].key, SERIE_0) == 0);
+    mu_assert(MSG_vector_match_misspelled, strcmp(misspelled_vect.data[1].key, SERIE_1) == 0);
 
     //Test no matches
     Vector no_vect = vector_match(NO_MATCH, test_vect);
@@ -191,9 +205,9 @@ static char* test_vector_find_index()
 {
     Vector test_vect = Setup();
 
-    int test_index = vector_find_index(TDATA2, test_vect);
+    int test_index = vector_find_index(SERIE_1, test_vect);
     int test_not_found = vector_find_index("FAIL", test_vect);
-    printf("CALL vector_find_index(%s, %s)\n", TDATA2, "test_vect");
+    printf("CALL vector_find_index(%s, %s)\n", SERIE_1, "test_vect");
     printf("CALL vector_find_index(%s, %s)\n\n", "FAIL", "test_vect");
 
 	printf("index is %d\nnot_found is %d\n", test_index, test_not_found);
@@ -210,7 +224,8 @@ static char* test_vector_find_index()
 static char* test_vector_remove() 
 {
     Vector test_vect = Setup();
-    vector_remove(STRING, &test_vect);
+    int index = vector_find_index(STRING, test_vect);
+    vector_remove(index, &test_vect);
     printf("CALL vector_remove(%s, %s)\n\n", STRING, "&test_vect");
 
 	printf("key is %s\n", test_vect.data[0].key);
@@ -229,10 +244,10 @@ static Vector Setup()
     Vector test_vect = vector_new();
 
     vector_add(dict_new(STRING, VALUE), &test_vect);
-    vector_add(dict_new(TDATA1, VALUE), &test_vect);
-    vector_add(dict_new(TDATA2, VALUE), &test_vect);
-    vector_add(dict_new(TDATA3, VALUE), &test_vect);
-    vector_add(dict_new(TDATA4, VALUE), &test_vect);
+    vector_add(dict_new(SERIE_0, VALUE), &test_vect);
+    vector_add(dict_new(SERIE_1, VALUE), &test_vect);
+    vector_add(dict_new(SERIE_2, VALUE), &test_vect);
+    vector_add(dict_new(SERIE_3, VALUE), &test_vect);
 
     return test_vect;
 }

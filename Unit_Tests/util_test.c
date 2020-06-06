@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../size.h"
 #include "../color.h"
 #include "../util.h"
 #include "minunit.h"
@@ -10,6 +11,7 @@ static char * test_substring(void);
 static char * test_str_split(void);
 static char * test_multi_str_split(void);
 static char * test_count_delimiter(void);
+static char * test_char_replace(void);
 
 int tests_run = 0;
 
@@ -23,11 +25,15 @@ int tests_run = 0;
 #define EXPECTED2 "LONG"
 #define EXPECTED_SIZE "3"
 
+#define EXPECTED_LONG_STRING "TEST_LONG_STRING"
+
 #define MSG_test_substring_0 "Error, test_substring s1 should be "EXPECTED0
 #define MSG_test_substring_1 "Error, test_substring s2 should be "EXPECTED1
 
 #define MSG_test_str_split_0 "Error, test_str_split arr[0] should be "EXPECTED0
 #define MSG_test_str_split_1 "Error, test_str_split arr[1] should be "EXPECTED1
+
+#define MSG_test_str_split_no_delimiter "Error, test_str_split no_space[0] should be "NO_SPACE
 
 #define MSG_test_multi_str_split_0 "Error, test_multi_str_split arr[0] should be "EXPECTED0
 #define MSG_test_multi_str_split_1 "Error, test_multi_str_split arr[1] should be "EXPECTED2
@@ -37,6 +43,8 @@ int tests_run = 0;
 #define MSG_test_multi_str_split_no_space "Error, test_multi_str_split no_space[0] should be "NO_SPACE
 
 #define MSG_test_count_delimiter "Error, test_count_delimiter del_count should be "EXPECTED_COUNT
+
+#define MSG_test_char_replace "Error, test_char_replace string should be "EXPECTED_LONG_STRING
 
 static char * test_substring() 
 {
@@ -63,6 +71,11 @@ static char * test_str_split()
     mu_assert(MSG_test_str_split_1, strcmp(arr[1],EXPECTED1) == 0);
     free(arr);
 
+    char ** no_space = str_split(NO_SPACE, ' ');
+    printf("no_space[0] is %s from "NO_SPACE"\n", no_space[0]);
+    mu_assert(MSG_test_str_split_no_delimiter, strcmp(no_space[0], NO_SPACE) == 0);
+    free(no_space);
+
 	printf("\ntest_str_split ");
 	print_color(GREEN, "PASSED\n\n");
 
@@ -88,7 +101,7 @@ static char * test_multi_str_split()
     free(no_space);
 
     printf("\ntest_multi_str_split ");
-    print_color(GREEN, "PASSED\n");
+    print_color(GREEN, "PASSED\n\n");
 
     return 0;
 }
@@ -106,6 +119,19 @@ static char * test_count_delimiter()
     return 0;
 }
 
+static char * test_char_replace()
+{
+    char * string = char_replace(LONG_STRING, ' ', '_');
+
+    printf("string is %s from "LONG_STRING"\n", string);
+    mu_assert(MSG_test_char_replace, strcmp(EXPECTED_LONG_STRING, string) == 0);
+
+    printf("\ntest_char_replace ");
+    print_color(GREEN, "PASSED\n");
+
+    return 0;
+}
+
 
 static char* all_tests() 
 {
@@ -113,6 +139,7 @@ static char* all_tests()
     mu_run_test(test_str_split);
     mu_run_test(test_count_delimiter);
     mu_run_test(test_multi_str_split);
+    mu_run_test(test_char_replace);
     return 0;
 }
 

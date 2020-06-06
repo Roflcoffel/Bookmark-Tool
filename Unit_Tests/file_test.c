@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
+#include "../size.h"
 #include "../color.h"
 #include "../vector.h"
 #include "../file.h"

@@ -122,7 +122,7 @@ Dict vector_find_by_index(int index, Vector vect)
 //requires an exact key, so it is not user friendly.
 Dict vector_find(char key[S_SIZE], Vector vect, int *index)
 {
-        int *index = vector_find_index(key, vect);
+        *index = vector_find_index(key, vect);
         if(*index == -1)
                 return dict_new("NULL", 0);
         
