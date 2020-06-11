@@ -121,10 +121,11 @@ static char * test_count_delimiter()
 
 static char * test_char_replace()
 {
-    char * string = char_replace(LONG_STRING, ' ', '_');
+    char str[] = LONG_STRING;
+    char_replace(str, ' ', '_');
 
-    printf("string is %s from "LONG_STRING"\n", string);
-    mu_assert(MSG_test_char_replace, strcmp(EXPECTED_LONG_STRING, string) == 0);
+    printf("string is %s from "LONG_STRING"\n", str);
+    mu_assert(MSG_test_char_replace, strcmp(EXPECTED_LONG_STRING, str) == 0);
 
     printf("\ntest_char_replace ");
     print_color(GREEN, "PASSED\n");

@@ -26,6 +26,8 @@
                 "__locale": "c",
                 "__node_handle": "c",
                 "typeindex": "c",
-                "typeinfo": "c"
+                "typeinfo": "c",
+                "bitset": "c",
+                "algorithm": "c"
         }
 }
