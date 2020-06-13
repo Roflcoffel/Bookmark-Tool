@@ -101,7 +101,7 @@ void action_add(char name[S_SIZE], Vector *db)
 }
 
 //id: 4
-void action_remove(char id[S_SIZE], Vector *db)
+int action_remove(char id[S_SIZE], Vector *db)
 {
         int index = atoi(id);
         if(valid_id(index, *db) == false)
@@ -115,7 +115,7 @@ void action_remove(char id[S_SIZE], Vector *db)
 }
 
 //id: 5
-void action_inc(char id[S_SIZE], Vector *db)
+int action_inc(char id[S_SIZE], Vector *db)
 {
         int index = atoi(id);
         if(valid_id(index, *db) == false)

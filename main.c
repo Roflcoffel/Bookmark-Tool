@@ -34,7 +34,6 @@
 void set_default(Vector *db);
 
 //TODO for 1.0:
-// RUN TESTS
 // Test the main program
 // implement dir_as_name flag
 // in README.md example show what the expected output is for each command.
@@ -51,7 +50,8 @@ void set_default(Vector *db);
 int main(int argc, const char* argv[]) 
 {
         //Initiate all basic commands
-        command_init();
+        Vector commands = vector_new();
+        command_init(&commands);
         
         Vector db = vector_new();
         Vector default_db = vector_new();
@@ -94,6 +94,8 @@ int main(int argc, const char* argv[])
                 if (getcwd(cwd, sizeof(cwd)) != NULL) {
                         arg_is_dirname = true;
                         strcpy(arg, cwd);
+
+                        //char_replace(&arg, '_', ' ');
                 } 
         }
 
