@@ -142,7 +142,8 @@ void vector_remove(int index, Vector *vect)
 
 void vector_destroy(Vector *vect)
 {
-        free(vect->data);
+        //Look up, how to free from a struct!
+        free(vect->data);     
         vect = NULL;
 }
 

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "size.h"
 #include "util.h"
@@ -41,7 +42,6 @@ void action_execute(int id, char name[S_SIZE], bool strict_mode, Vector *db)
                         action_inc(name, db);
                         break;
                 default:
-                        printf("Function was not found\n");
                         break;
         }
 }
@@ -51,7 +51,7 @@ void action_list_all(Vector db)
 {
         for(int i = 0; i < db.size; i++)
         {
-                printf("%.10d : %.20s -> %d\n", i, db.data[i].key, db.data[i].value);
+                printf("%d : %-20s -> %d\n", i, db.data[i].key, db.data[i].value);
         }
 }
 
@@ -59,9 +59,22 @@ void action_list_all(Vector db)
 void action_list_by_name(char name[S_SIZE], Vector db)
 {
         Vector vect = vector_match(name, db);
+        
+        //would be better to get the indexes from the vector_match, but this is simpler for now.
+        int indexes[vect.size];
+
+        for (int i = 0; i < db.size; i++)
+        {
+                for (int j = 0; j < vect.size; j++)
+                {
+                        if(strcmp(vect.data[j].key, db.data[i].key) == 0)
+                                indexes[j] = i;
+                }
+        }
+        
         for (int i = 0; i < vect.size; i++)
         {
-                printf("%.10d : %.20s -> %d\n", i, vect.data[i].key, vect.data[i].value);
+                printf("%d : %-20s -> %d\n", indexes[i], vect.data[i].key, vect.data[i].value);
         }
 }
 
@@ -70,7 +83,7 @@ void action_list_by_name_strict(char name[S_SIZE], Vector db)
 {
         int index;
         Dict t = vector_find(name, db, &index);
-        printf("%.10d : %.20s -> %d\n", index, t.key, t.value);
+        printf("%d : %s -> %d\n", index, t.key, t.value);
 }
 
 //id: 2
@@ -97,7 +110,7 @@ void action_add(char name[S_SIZE], Vector *db)
         char ** name_split = str_split(name, ':');
         Dict pair = dict_new(name_split[0], atoi(name_split[1]));
         vector_add(pair, db);
-        printf("Added:\n    -> %.20s\n    -> %d\n", pair.key, pair.value);
+        printf("Added:\n    -> %s\n    -> %d\n", pair.key, pair.value);
 }
 
 //id: 4
@@ -111,7 +124,7 @@ int action_remove(char id[S_SIZE], Vector *db)
         }
         
         vector_remove(index, db);
-        printf("Removed:\n    -> %.20s\n", db->data[index].key);
+        printf("Removed:\n    -> %s\n", db->data[index].key);
 }
 
 //id: 5
@@ -125,5 +138,5 @@ int action_inc(char id[S_SIZE], Vector *db)
         }
 
         db->data[index].value++;
-        printf("Increased:\n    -> %.20s\n    to %d\n", db->data[index].key, db->data[index].value);
+        printf("Increased:\n    -> %s\n    to %d\n", db->data[index].key, db->data[index].value);
 }

@@ -34,16 +34,17 @@
 void set_default(Vector *db);
 
 //TODO for 1.0:
-// Test the main program
-// implement dir_as_name flag
+// Real world testing
+// Create a simple install script.
 // in README.md example show what the expected output is for each command.
-// padding spaces for action outputs
 
 //## Memory Leaks ##
 // use valgrind on (vector / util / file).
 
 // 1.1: 
+// edit command, to change to value of a pair. (useful when making a mistake)
 // instead of a next command:
+// PlayNext.sh [serie_id]
 // Add a next bash script, with this vlc $(sel.sh $(( $(bookmark list serie_id --value)+1 )))
 // and at the end, bookmark inc serie_id
 
@@ -60,8 +61,6 @@ int main(int argc, const char* argv[])
         
         //Read from file or create
         file_init(FULLPATH, &db, default_db);
-
-        printf("FULLPATH: %s", FULLPATH);
         
         if(argc <= 1) {
                 printf(VERSION USAGE);
@@ -73,7 +72,7 @@ int main(int argc, const char* argv[])
         int cmd_id;
         strcpy(cmd, argv[1]);
 
-        print_color(BLUE, "Command: ");
+        print_color(CYAN, "Command: ");
         printf("%s\n", cmd);
 
         //User data input string
@@ -82,7 +81,7 @@ int main(int argc, const char* argv[])
         //strcmp return 1 or -1 when the strings do not match
         if(argc >= 3 && strcmp("NULL", argv[2]) != 0) {
               strcpy(arg, argv[2]);
-              print_color(BLUE, "argument: ");
+              print_color(CYAN, "argument: ");
               printf("%s\n", arg);
         }
 
@@ -93,20 +92,24 @@ int main(int argc, const char* argv[])
         if(strcmp("--dir_as_name", arg) == 0) {
                 if (getcwd(cwd, sizeof(cwd)) != NULL) {
                         arg_is_dirname = true;
-                        strcpy(arg, cwd);
+                        size_t size;
+                        char ** cwd_split = multi_str_split(cwd, '/', &size);
 
-                        //char_replace(&arg, '_', ' ');
+                        strcpy(arg, cwd_split[size-1]);
+                        char_replace(arg, '_', ' ');
+
+                        free_array(cwd_split, size);
                 } 
         }
 
-        printf("ARG: %s", arg);
+        printf("ARG: %s\n", arg);
 
         int arg_count = argc - 2; //Discard filename and option
-        print_color(BLUE, "argument count: ");
+        print_color(CYAN, "argument count: ");
+        printf("%d\n", arg_count);
 
         bool action_done = false;
 
-        /*
         for(int i = 0; i < commands.size; i++)
         {
                 if((strcmp(commands.data[i].key,cmd) == 0) && (commands.data[i].value == arg_count)) {
@@ -116,18 +119,18 @@ int main(int argc, const char* argv[])
                        break;
                 }
         }
-        */
 
         if(!action_done)
         {
-                printf("Invalid commands and argument!\n");
+                print_color(RED, "Invalid commands and argument!\n");
+                printf(USAGE);
                 return 0;
         }
 
         //check if we need to update the file!
         //list       ids: 0, 1, 2
         //add,rm,inc ids: 3, 4, 5
-        //if(cmd_id >= 3) file_write(FULLPATH, db);
+        if(cmd_id >= 3) file_write(FULLPATH, db);
 
         vector_destroy(&db);
         vector_destroy(&default_db);

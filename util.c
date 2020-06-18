@@ -64,7 +64,7 @@ char ** str_split(char string[S_SIZE], char delimiter)
 }
 
 //Splits a string at ALL delimiters
-//strings starting or ending with a space are not supported!
+//strings starting or ending with a delimiter are not supported!
 //string    - string you want to split
 //delimiter - the character you want to split at, if the delimiter is not found returns the input in a char **
 //size      - stores the array size in this variable (output)
@@ -91,7 +91,7 @@ char ** multi_str_split(char string[S_SIZE], char delimiter, size_t *size)
 
         int count = 0;
         int start = 0;
-        for(int i = 0; i < len+1; i++)
+        for(int i = 1; i < len+1; i++)
         {
                 if(string[i] == delimiter || i == len)
                 {
@@ -115,7 +115,7 @@ int count_delimiter(char string[S_SIZE], char delimiter)
         size_t len = strlen(string);
 
         //Skips first and last character
-        for(int i = 1; i < len-1; i++)
+        for(int i = 1; i < len; i++)
         {
                 if(string[i] == delimiter)
                 {
@@ -140,5 +140,16 @@ void char_replace(char string[S_SIZE], char find, char replace)
                 {
                         string[i] = replace;
                 }
+        }
+}
+
+//frees a char ** (string array), from memory
+//arr_str  - input arr_str to free from memory.
+//arr_size - the size of the arr_str 
+void free_array(char ** arr_str, size_t arr_size)
+{
+        for (int i = 0; i < arr_size; i++)
+        {
+                free(arr_str[i]);
         }
 }

@@ -133,7 +133,6 @@ static char * test_char_replace()
     return 0;
 }
 
-
 static char* all_tests() 
 {
     mu_run_test(test_substring);
