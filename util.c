@@ -90,7 +90,7 @@ char ** multi_str_split(char string[S_SIZE], char delimiter, size_t *size)
         }
 
         int count = 0;
-        int start = 0;
+        int start = (string[0] == delimiter) ? 1 : 0; //Skip if first char is a /
         for(int i = 1; i < len+1; i++)
         {
                 if(string[i] == delimiter || i == len)

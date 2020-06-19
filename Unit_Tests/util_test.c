@@ -18,6 +18,14 @@ int tests_run = 0;
 #define STRING "TEST STRING"
 #define LONG_STRING "TEST LONG STRING"
 #define NO_SPACE "NO_SPACE"
+#define PATH "/mnt/windows/Random/Place/Wow"
+
+#define P_EXPECTED_SIZE "5"
+#define P_EXPECTED0 "mnt"
+#define P_EXPECTED1 "windows"
+#define P_EXPECTED2 "Random"
+#define P_EXPECTED3 "Place"
+#define P_EXPECTED4 "Wow"
 
 #define EXPECTED_COUNT "2"
 #define EXPECTED0 "TEST"
@@ -39,6 +47,13 @@ int tests_run = 0;
 #define MSG_test_multi_str_split_1 "Error, test_multi_str_split arr[1] should be "EXPECTED2
 #define MSG_test_multi_str_split_2 "Error, test_multi_str_split arr[2] should be "EXPECTED1
 #define MSG_test_multi_str_split_size "Error, test_multi_str_split size should be "EXPECTED_SIZE
+
+#define MSG_test_multi_str_split_path_0 "Error, test_multi_str_split arr[0] should be "P_EXPECTED0
+#define MSG_test_multi_str_split_path_1 "Error, test_multi_str_split arr[1] should be "P_EXPECTED1
+#define MSG_test_multi_str_split_path_2 "Error, test_multi_str_split arr[2] should be "P_EXPECTED2
+#define MSG_test_multi_str_split_path_3 "Error, test_multi_str_split arr[3] should be "P_EXPECTED3
+#define MSG_test_multi_str_split_path_4 "Error, test_multi_str_split arr[4] should be "P_EXPECTED4
+#define MSG_test_multi_str_split_path_size "Error, test_multi_str_split size should be "P_EXPECTED_SIZE
 
 #define MSG_test_multi_str_split_no_space "Error, test_multi_str_split no_space[0] should be "NO_SPACE
 
@@ -93,6 +108,21 @@ static char * test_multi_str_split()
     mu_assert(MSG_test_multi_str_split_1, strcmp(arr[1],EXPECTED2) == 0);
     mu_assert(MSG_test_multi_str_split_2, strcmp(arr[2],EXPECTED1) == 0);
     free(arr);
+
+    size_t size_path_arr = 0;
+    char ** path_arr = multi_str_split(PATH, '/', &size_path_arr);
+
+    printf("\nsize is %d\narr[0] is %s\narr[1] is %s\narr[2] is %s\narr[3] is %s\narr[4] is %s\nFrom: "PATH"\n",
+        size_path_arr, path_arr[0], path_arr[1], path_arr[2], path_arr[3], path_arr[4]
+    );
+
+    mu_assert(MSG_test_multi_str_split_path_size, size_path_arr == atoi(P_EXPECTED_SIZE));
+    mu_assert(MSG_test_multi_str_split_path_0, strcmp(path_arr[0],P_EXPECTED0) == 0);
+    mu_assert(MSG_test_multi_str_split_path_1, strcmp(path_arr[1],P_EXPECTED1) == 0);
+    mu_assert(MSG_test_multi_str_split_path_2, strcmp(path_arr[2],P_EXPECTED2) == 0);
+    mu_assert(MSG_test_multi_str_split_path_3, strcmp(path_arr[3],P_EXPECTED3) == 0);
+    mu_assert(MSG_test_multi_str_split_path_4, strcmp(path_arr[4],P_EXPECTED4) == 0);
+    free(path_arr);
 
     size_t size_no_space = 0;
     char ** no_space = multi_str_split(NO_SPACE, ' ', &size_no_space);

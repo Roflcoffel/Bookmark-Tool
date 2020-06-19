@@ -39,6 +39,7 @@ void set_default(Vector *db);
 // in README.md example show what the expected output is for each command.
 
 //## Memory Leaks ##
+// use a free for evertime you use a malloc, and also free the pointer array itself.
 // use valgrind on (vector / util / file).
 
 // 1.1: 
@@ -61,7 +62,21 @@ int main(int argc, const char* argv[])
         
         //Read from file or create
         file_init(FULLPATH, &db, default_db);
-        
+
+        //Here the garbage gets added to the multi_str_split, still don't know why,
+        //it have to be something in file_init.
+        //CURRENT HACK SOLUTION
+        //running the command once seems to "clean" the ouput, so this is the solution for now
+
+        //So if the string is 22 and there are 3 items, we still have garbage on the second multi_str_split
+        //if I add an item so we have 4, then both works.
+        //May be a problem when there is exactly three, (or maybe less) it causes the problem but only
+        //to the next multi_str_split call, strange...
+        size_t garb_size = 0;
+        char ** garb = multi_str_split("/clean/random/garbage/four", '/', &garb_size);
+        //printf("%s\n", garb[0]);
+        free_array(garb, garb_size); free(garb);
+
         if(argc <= 1) {
                 printf(VERSION USAGE);
                 return 0;
@@ -71,7 +86,6 @@ int main(int argc, const char* argv[])
         char cmd[S_SIZE];
         int cmd_id;
         strcpy(cmd, argv[1]);
-
         print_color(CYAN, "Command: ");
         printf("%s\n", cmd);
 
@@ -92,7 +106,8 @@ int main(int argc, const char* argv[])
         if(strcmp("--dir_as_name", arg) == 0) {
                 if (getcwd(cwd, sizeof(cwd)) != NULL) {
                         arg_is_dirname = true;
-                        size_t size;
+                        size_t size = 0;
+
                         char ** cwd_split = multi_str_split(cwd, '/', &size);
 
                         strcpy(arg, cwd_split[size-1]);

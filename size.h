@@ -5,4 +5,4 @@
 
 //File.h
 #define S_FILENAME 255
-#define LINESIZE 1000
+#define LINESIZE 500

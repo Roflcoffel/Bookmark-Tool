@@ -44,8 +44,10 @@ void file_write(char filename[S_FILENAME], Vector db)
 void file_to_vector(FILE *file, Vector *db)
 {
         while (fgets(lines, sizeof(lines), file)) {
-                char ** s = str_split(lines, ',');
+                size_t size = 0;
+                char ** s = multi_str_split(lines, ',', &size);
                 vector_add(dict_new(s[0], atoi(s[1])), db);
+                free_array(s, size); free(s);
         }
         fclose(file);
 }
