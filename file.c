@@ -6,7 +6,6 @@
 
 #include "size.h"
 #include "vector.h"
-#include "util.h"
 #include "file.h"
 
 char lines[LINESIZE];

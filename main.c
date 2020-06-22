@@ -49,15 +49,32 @@ void set_default(Vector *db);
 // Add a next bash script, with this vlc $(sel.sh $(( $(bookmark list serie_id --value)+1 )))
 // and at the end, bookmark inc serie_id
 
+//the returns in action can be used for error handling
+// maybe add a file for error handling hmmmmm...
+
+//when looping through a string, instead of using strlen and for loop,
+//you can try using a while, and look for the null character
+
 int main(int argc, const char* argv[]) 
 {
+        if(argc <= 1) {
+                printf(VERSION USAGE);
+                return 0;
+        }
+
+        char arg[S_SIZE]; //Arguments to the command
+        char cmd[S_SIZE]; //The command to run
+        char cwd[S_SIZE]; //Current Working Directory
+        
+        int cmd_id = 0;
+        bool arg_is_dirname = false;
+        
         //Initiate all basic commands
         Vector commands = vector_new();
         command_init(&commands);
         
-        Vector db = vector_new();
+        Vector db         = vector_new();
         Vector default_db = vector_new();
-        
         set_default(&default_db);
         
         //Read from file or create
@@ -77,30 +94,12 @@ int main(int argc, const char* argv[])
         //printf("%s\n", garb[0]);
         free_array(garb, garb_size); free(garb);
 
-        if(argc <= 1) {
-                printf(VERSION USAGE);
-                return 0;
-        }
-
-        //User option (list, add, remove, inc)
-        char cmd[S_SIZE];
-        int cmd_id;
+        //Current Command
         strcpy(cmd, argv[1]);
-        print_color(CYAN, "Command: ");
-        printf("%s\n", cmd);
 
-        //User data input string
-        char arg[S_SIZE];
-
-        //strcmp return 1 or -1 when the strings do not match
-        if(argc >= 3 && strcmp("NULL", argv[2]) != 0) {
-              strcpy(arg, argv[2]);
-              print_color(CYAN, "argument: ");
-              printf("%s\n", arg);
-        }
-
-        bool arg_is_dirname = false;
-        char cwd[S_SIZE];
+        //Check if the third argument exists.
+        if(argc >= 3 && strcmp("NULL", argv[2]) != 0) 
+                strcpy(arg, argv[2]);
 
         //Check for the dir flag, and replace arg with cwd
         if(strcmp("--dir_as_name", arg) == 0) {
@@ -117,12 +116,7 @@ int main(int argc, const char* argv[])
                 } 
         }
 
-        printf("ARG: %s\n", arg);
-
         int arg_count = argc - 2; //Discard filename and option
-        print_color(CYAN, "argument count: ");
-        printf("%d\n", arg_count);
-
         bool action_done = false;
 
         for(int i = 0; i < commands.size; i++)
@@ -143,8 +137,8 @@ int main(int argc, const char* argv[])
         }
 
         //check if we need to update the file!
-        //list       ids: 0, 1, 2
-        //add,rm,inc ids: 3, 4, 5
+        //list            ids: 0, 1, 2
+        //add,rm,inc,edit ids: 3, 4, 5, 6
         if(cmd_id >= 3) file_write(FULLPATH, db);
 
         vector_destroy(&db);

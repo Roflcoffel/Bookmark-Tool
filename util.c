@@ -1,8 +1,6 @@
 //Hopefully useful functions
 #include <string.h>
 #include <stdlib.h>
-#include <stddef.h>
-#include <stdio.h> //for printf debugging for now
 #include <stdbool.h>
 
 #include "size.h"

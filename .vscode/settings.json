@@ -28,6 +28,9 @@
                 "typeindex": "c",
                 "typeinfo": "c",
                 "bitset": "c",
-                "algorithm": "c"
+                "algorithm": "c",
+                "*.ipp": "c",
+                "thread": "c",
+                "locale": "c"
         }
 }

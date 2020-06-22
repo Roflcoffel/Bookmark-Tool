@@ -15,4 +15,5 @@ void command_init(Vector * commands)
         vector_add( dict_new("add",    1), commands );
         vector_add( dict_new("remove", 1), commands );
         vector_add( dict_new("inc",    1), commands );
+        vector_add( dict_new("edit",   1), commands );
 }
