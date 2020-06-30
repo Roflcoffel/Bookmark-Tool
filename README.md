@@ -12,21 +12,25 @@ bookmark [COMMAND] name:value
 Creates a name, value pair that is stored in a simple csv file.  
 List all bookmarks or search for a specified string.
 
-the *name* is always a string
-the *value* is always a number
-the *id* is displayed when listing.
+the **name** is a string, and acts as a key to the **value**.  
+the **value** is a number, and is the part you want to remember.  
+the **id** is a number, it is the index of a line in the csv file.    
 
-**list** *[name]*  
-lists all bookmarks created, or the best match for a specified *name*. 
+**list** [name]  
+lists all bookmarks created, or the best match for a specified **name**,
+also displays the **id** of each pair.
 
-**add** *name:value*  
-adds the specified *name:value* pair to the csv file.
+**add** name:value  
+adds the specified **name:value** pair to the csv file.
 
-**remove** *id*  
+**remove** id  
 removes the specified pair from the csv file.
 
-**inc** *id*  
-increases the *value* of the pair with *id*
+**inc** id  
+increases the **value** of the pair with the specified **id**
+
+**edit** id:value  
+changes the **value** of the pair with the specified **id**
 
 ### EXAMPLES
 list all bookmarks:  
@@ -45,6 +49,13 @@ remove a bookmark
  
  	bookmark remove 1
 
-increase a value of bookmark
+increase a value of a bookmark
 
 	bookmark inc 1
+
+change the value of a bookmark  
+
+	bookmark edit 1:4
+
+### NOTE
+When doing an edit, the id comes first then the value.

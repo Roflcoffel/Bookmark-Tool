@@ -9,7 +9,7 @@
 //start       - array start index
 //num_of_char - number of total characters, 0 == length of "string";
 //string      - string to extract from
-//return      - a substring
+//return      - a substring (a malloced bloock)
 char * substring(int start, int num_of_char, char string[S_SIZE])
 {       
         if(start > S_SIZE) return string;
@@ -50,8 +50,14 @@ char ** str_split(char string[S_SIZE], char delimiter)
                 if(string[i] == delimiter) 
                 {
                         delimter_found = true;
-                        strcpy(str[0], substring(0,i,string));
-                        strcpy(str[1], substring(i+1,0,string));
+                        
+                        char * element0 = substring(0,i,string);
+                        char * element1 = substring(i+1,0,string);
+
+                        strcpy(str[0], element0);
+                        strcpy(str[1], element1);
+
+                        free(element0); free(element1);
                         break;
                 }
         }
@@ -94,9 +100,12 @@ char ** multi_str_split(char string[S_SIZE], char delimiter, size_t *size)
                 if(string[i] == delimiter || i == len)
                 {
                         str[count] = malloc(S_SIZE * sizeof(char));
-                        strcpy(str[count], substring(start,i-start,string));
+                        char * element = substring(start,i-start,string);
+                        strcpy(str[count], element);
                         start = i+1;
                         count++;
+
+                        free(element);
                 }
         }
 
@@ -141,7 +150,7 @@ void char_replace(char string[S_SIZE], char find, char replace)
         }
 }
 
-//frees a char ** (string array), from memory
+//frees the elements of a char ** array.
 //arr_str  - input arr_str to free from memory.
 //arr_size - the size of the arr_str 
 void free_array(char ** arr_str, size_t arr_size)

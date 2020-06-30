@@ -21,9 +21,10 @@
               "    add    - name:value ; creates a new name:value pair\n" \
               "    remove - id         ; remove the pair with the provided id\n" \
               "    inc    - id         ; increases the value of the pair with the povided id\n\n" \
+              "    edit   - id:value   ; chances the value of the pair with the provided id\n\n" \
               "FLAGS:\n" \
               "    list --dir_as_name  ; instead of providing a name use the current dir as the name\n" \
-              "    list --value        ; returns only the value of the pair\n\n" \
+              "    list --value        ; returns only the value of the pair, used for piping\n\n" \
               "NOTES:\n" \
               "    [] means optional\n" \
               "    no command = list\n" \
@@ -33,22 +34,24 @@
 
 void set_default(Vector *db);
 
+//REMEMBER TO CHANGE CONFIG, BEFORE EXECUTING INSTALL!
+
 //TODO for 1.0:
+// Test if str_split and multi_str_split still works, added free() to the substring calls.
 // Real world testing
-// Create a simple install script.
-// in README.md example show what the expected output is for each command.
+// Configuration, should look up how to do this porperly with make
+// Just need to learn what you can do with make
 
 //## Memory Leaks ##
-// use a free for evertime you use a malloc, and also free the pointer array itself.
 // use valgrind on (vector / util / file).
 
-// 1.1: 
-// edit command, to change to value of a pair. (useful when making a mistake)
-// instead of a next command:
-// PlayNext.sh [serie_id]
-// Add a next bash script, with this vlc $(sel.sh $(( $(bookmark list serie_id --value)+1 )))
-// and at the end, bookmark inc serie_id
+//for PlayNext.sh
+//make sure that on fail that bookmark, returns something we can check for
+//or modify sel.sh to handle errors?
+//vlc will try to play anything you give it, so to avoid that
+//do not execute vlc if either sel.sh or bookmark failed
 
+//## Ideas / Optimisations
 //the returns in action can be used for error handling
 // maybe add a file for error handling hmmmmm...
 
@@ -112,7 +115,7 @@ int main(int argc, const char* argv[])
                         strcpy(arg, cwd_split[size-1]);
                         char_replace(arg, '_', ' ');
 
-                        free_array(cwd_split, size);
+                        free_array(cwd_split, size); free(cwd_split);
                 } 
         }
 

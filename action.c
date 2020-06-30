@@ -5,6 +5,7 @@
 
 #include "size.h"
 #include "vector.h"
+#include "util.h"
 #include "action.h"
 
 //executes a function based on id, when arg is a dirname, we enter strict mode
@@ -113,9 +114,10 @@ void action_add(char key_value[S_SIZE], Vector *db)
 {
         char ** name_split = str_split(key_value, ':');
         Dict pair = dict_new(name_split[0], atoi(name_split[1]));
-        free(name_split[0]); free(name_split[1]); free(name_split);
         vector_add(pair, db);
         printf("Added:\n    -> %s\n    -> %d\n", pair.key, pair.value);
+
+        free(name_split[0]); free(name_split[1]); free(name_split);
 }
 
 //id: 4
@@ -159,6 +161,8 @@ int action_edit(char id_value[S_SIZE], Vector *db)
         int index = atoi(split_value[0]);
         int value = atoi(split_value[1]);
 
+        free(split_value[0]); free(split_value[1]); free(split_value);
+        
         if(valid_id(index, *db) == false)
         {
                 printf("id is not valid\n");
