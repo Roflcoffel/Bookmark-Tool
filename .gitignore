@@ -1,5 +1,8 @@
 # Bookmark-Tools
 bookmark
+Unit_Tests/util_tests
+Unit_Tests/file_tests
+Unit_Tests/vector_tests
 
 # Prerequisites
 *.d

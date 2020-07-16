@@ -8,10 +8,13 @@
 #include "util.h"
 #include "action.h"
 
+int padding; //makes sure all key values are lined up.
+
 //executes a function based on id, when arg is a dirname, we enter strict mode
 //strict mode only returns exact matches.
 void action_execute(int id, char arg[S_SIZE], char format[S_SIZE], Vector *db)
 {
+        padding = vector_longest_key(*db) + 1;
         switch(id)
         {
                 case 0:
@@ -45,7 +48,7 @@ void action_list_all(Vector db)
 {
         for(int i = 0; i < db.size; i++)
         {
-                printf("%d : %-20s -> %d\n", i, db.data[i].key, db.data[i].value);
+                printf("%d : %-*s -> %d\n", i, padding, db.data[i].key, db.data[i].value);
         }
 }
 

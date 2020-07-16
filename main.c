@@ -22,7 +22,7 @@
               "    add    - name:value  ; creates a new name:value pair\n" \
               "    remove - id          ; remove the pair with the provided id\n" \
               "    inc    - id          ; increases the value of the pair with the povided id\n\n" \
-              "    edit   - id:value    ; chances the value of the pair with the provided id\n\n" \
+              "    edit   - id:value    ; changes the value of the pair with the provided id\n\n" \
               "FLAGS:\n" \
               "    list --dir_as_name   ; instead of providing a name use the current dir as the name\n" \
               "NOTES:\n" \
@@ -38,59 +38,19 @@ void set_default(Vector *db);
 
 //TODO for 1.0:
 // Test if str_split and multi_str_split still works, added free() to the substring calls.
+// The str_split and multi_str_split seems to work atleast in unit tests.
+// also see if the added free() removes the garbadge
 // Real world testing
-// Configuration, should look up how to do this porperly with make
-// Just need to learn what you can do with make
+// undo command, this would need a new file, which has a list of all operations done to the main file.
 
 //## Memory Leaks ##
 // use valgrind on (vector / util / file).
 
 //for PlayNext.sh
 //Maybe a plugin for vlc, can increment the bookmark instead of PlayNext
-//this is to make sure that every time PlayNext is called the episode i assumed
+//this is to make sure that every time PlayNext is called the episode is assumed
 //to be watched, a small plugin can look at the time and increment bookmark when
 //we are half way through an episode.
-
-//to increment we need the id, so may need to add a get id command
-//it would look like this: 
-//bookmark get_id name
-//bookmark get_id --dir_as_value
-//--dir_as_value just resolves itself to a directory name, meaning
-//it can be treated as get_id name
-//the question now is name in this context should this be a strict match or non strict.
-//because match can return more than one value, this should be a strict match.
-
-//instead of a command, get_id can just be a flag, only problem is that I am not handling
-//flags in a good way
-
-//think of a good way to handle flags, the id flag would only be just with the list ofcourse
-//and should only really change the output.
-
-//bookmark list name --id           ; would return all ids that matches name
-//bookmark list --dir_as_value --id ; would only return a single value
-
-//if this is the last flag, I guess checking it in action can be okej, right now we always
-//assume the flag is --value beacuse there is only flag
-
-//instead of handling flags, the last command can always be interpretted as a string format
-//so we can just pass in how we want to format the output, this feels like the most elegant way.
-//is there a way to format three variables, so that only one of the is displayed
-//meaning can we turn: printf("%d, %s, %d", id, key, value); to a format that only displays
-//the id, or the value
-//%.0s prints the argument with 0 width, so with that we can print positional arguments
-//the format to provide is a little weird but I think it is an okay solution.
-//to get only the value: "%.0s%.0s%d"
-//to get only the id   : "%d%.0s%.0s"
-
-//this also removes the current value flag, and hopfully simplfies the code.
-//it will also be possible to format in ways that I cannot think of, which may accedentily solve
-//some other problem, or command I want to add.
-
-//instead of a strict and non strict function, we can always first do a strict.
-//and then if no value was returned we try a vector_match instead.
-
-//this would remove two strict function, and some ifs and a bool.
-//and only make the function a little longer.
 
 //## Ideas / Optimisations
 //the returns in action can be used for error handling

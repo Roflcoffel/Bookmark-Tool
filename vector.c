@@ -132,6 +132,24 @@ Dict vector_find(char key[S_SIZE], Vector vect, int *index)
         return vect.data[*index];
 }
 
+//Counts the char in each key and returns the longest
+//vect   - the vector to search through
+//return - lenght of the longest key
+int vector_longest_key(Vector vect)
+{
+        int cur_longest = 0;
+        int length = 0;
+        for (size_t i = 0; i < vect.size; i++)
+        {
+                for (length = 0; vect.data[i].key[length] != '\0'; length++)
+                
+                if(length > cur_longest)
+                        cur_longest = length;
+        }
+        
+        return cur_longest;
+}
+
 void vector_inc(int index, Vector *vect)
 {
         vect->data[index].value++;
@@ -144,7 +162,7 @@ void vector_remove(int index, Vector *vect)
 
 void vector_destroy(Vector *vect)
 {
-        free(vect->data); free(vect);
+        free(vect->data);
 }
 
 bool valid_id(int index, Vector db)

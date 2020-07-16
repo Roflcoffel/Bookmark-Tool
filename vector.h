@@ -23,6 +23,7 @@ void vector_add(Dict dict, Vector *vect);
 Vector vector_match(char key[S_SIZE], Vector vect);
 Dict vector_find(char key[S_SIZE], Vector vect, int *index);
 int vector_find_index(char key[S_SIZE], Vector vect);
+int vector_longest_key(Vector vect);
 void vector_remove(int index, Vector *vect);
 void vector_destroy(Vector *vect);
 void vector_inc(int index, Vector *vect);
