@@ -31,36 +31,34 @@
               "    flags are only useable with list\n"
 
 #define FULLPATH PATH FILENAME
+#define BACKUP_PATH PATH BACKUP
 
 void set_default(Vector *db);
 
 //REMEMBER TO CHANGE CONFIG, BEFORE EXECUTING INSTALL!
 
 //TODO for 1.0:
-// Test if str_split and multi_str_split still works, added free() to the substring calls.
-// The str_split and multi_str_split seems to work atleast in unit tests.
+// Implement the Undo command
+// see if we really need to have a default entry!
 // also see if the added free() removes the garbadge
 // Real world testing
-// undo command, this would need a new file, which has a list of all operations done to the main file.
 
 //## Memory Leaks ##
 // use valgrind on (vector / util / file).
 
-//for PlayNext.sh
-//Maybe a plugin for vlc, can increment the bookmark instead of PlayNext
-//this is to make sure that every time PlayNext is called the episode is assumed
-//to be watched, a small plugin can look at the time and increment bookmark when
-//we are half way through an episode.
-
 //## Ideas / Optimisations
-//the returns in action can be used for error handling
-// maybe add a file for error handling hmmmmm...
+//the returns in action can be used for error handling'
+//maybe add a file for error handling hmmmmm..
+//if you do error handling, add a int return type to must void functions.
 
 //when looping through a string, instead of using strlen and for loop,
-//you can try using a while, and look for the null character
+//you can try using a for loop, and look for the null character
+
+//Look up exit(EXIT_FALIURE), and see if you can use it.
 
 int main(int argc, const char* argv[]) 
 {
+        
         if(argc <= 1) {
                 printf(VERSION USAGE);
                 return 0;
@@ -71,7 +69,7 @@ int main(int argc, const char* argv[])
         char cwd[S_SIZE]; //Current Working Directory
 
         //Format Argument, Default value
-        char format[S_SIZE] = "%d : %-20s -> %d\n"; 
+        char format[S_SIZE] = "%d : %-*s -> %d\n"; 
         
         //The id for the command executed
         int cmd_id = 0;
@@ -86,6 +84,7 @@ int main(int argc, const char* argv[])
         
         //Read from file or create
         file_init(FULLPATH, &db, default_db);
+        file_simple(BACKUP_PATH, default_db);
 
         //Here the garbage gets added to the multi_str_split, still don't know why,
         //it have to be something in file_init.
@@ -149,7 +148,11 @@ int main(int argc, const char* argv[])
         //check if we need to update the file!
         //list            ids: 0, 1, 2
         //add,rm,inc,edit ids: 3, 4, 5, 6
-        if(cmd_id >= 3) file_write(FULLPATH, db);
+        if(cmd_id >= 3) 
+        {
+                file_copy(FULLPATH, BACKUP_PATH); //Copy old file before updating
+                file_write(FULLPATH, db);
+        }
 
         vector_destroy(&db);
         vector_destroy(&default_db);

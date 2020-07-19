@@ -58,7 +58,7 @@ void action_list_by_name(char key[S_SIZE], char format[S_SIZE], Vector db)
         int index;
         Dict t = vector_find(key, db, &index);
         if(index != -1) {
-                printf(format, index, t.key, t.value);
+                printf(format, index, padding, t.key, t.value);
                 return;
         }
 
@@ -76,7 +76,7 @@ void action_list_by_name(char key[S_SIZE], char format[S_SIZE], Vector db)
         
         for (int i = 0; i < vect.size; i++)
         {
-                printf(format, indexes[i], vect.data[i].key, vect.data[i].value);
+                printf(format, indexes[i], padding, vect.data[i].key, vect.data[i].value);
         }
        
 }

@@ -1,8 +1,8 @@
 #!/bin/bash
-# Plays the next episode according to bookmark.
+# Plays the next episode according to bookmark, and increments the value
 # Dep: vlc, bookmark, sel
 
-bookmark_value=$(bookmark list --dir_as_value --value)
+bookmark_value=$(bookmark list --dir_as_name "%.s%.s%.s%d")
 book_status=$?
 
 sel_value=$(sel $bookmark_value)
@@ -32,4 +32,8 @@ then
 	fi
 fi
 
+id=$(bookmark list --dir_as_name "%d")
+
 vlc $sel_value
+
+bookmark inc $id

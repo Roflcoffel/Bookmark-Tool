@@ -26,21 +26,44 @@ void file_init(char filename[S_FILENAME], Vector *db, Vector default_db)
         }
 }
 
-//opens a file, and saves the content to a vector
+//Writes a vector to a file if it DOES NOT EXIST.
+void file_simple(char filename[S_FILENAME], Vector default_db)
+{
+        FILE *fp = fopen(filename, "r"); //r : read a file it must exist otherwise it returns NULL.
+        fp ? fclose(fp) : file_write(filename, default_db);
+}
+
+//Always creates a file and writes a vector to it, also replaces any existing file.
+void file_write(char filename[S_FILENAME], Vector db)
+{
+        FILE *fp = fopen(filename, "w"); //w : always creates a file, replaces any existing.
+        fp ? vector_to_file(fp, db) : printf("Insufficent Permissions\n"); //or file not found
+}
+
+//Reads a file and save it to a vector.
 void file_read(char filename[S_FILENAME], Vector *db)
 {
         FILE *fp = fopen(filename, "r");
-        fp ? file_to_vector(fp, db) : printf("File not found\n"); //Or Insufficent Permissions
+        fp ? file_to_vector(fp, db) : printf("Insufficent Permissions\n"); //or file not found
 }
 
-//opens a file, and writes a vector to it
-void file_write(char filename[S_FILENAME], Vector db)
+//Copies a soruce file to a target file.
+void file_copy(char source[S_FILENAME], char target[S_FILENAME])
 {
-        FILE *fp = fopen(filename, "w");
-        fp ? vector_to_file(fp, db) : printf("File not found\n"); //or Insufficent Permissions
+        FILE *fp_source = fopen(source, "r");
+        if(fp_source == NULL) return; //file not found abort.
+
+        FILE *fp_target = fopen(target, "w");
+        if(fp_target == NULL) return; ////file not found abort.
+        //fp_target should not be able to be null, because "w" creates a file if it does not exist.
+        
+        char c;
+        while( ( c = fgetc(fp_source) ) != EOF ) fputc(c, fp_target);
+
+        fclose(fp_source); fclose(fp_target);
 }
 
-//READS a file and save it to a vector
+//READS a file and saves it to a vector
 void file_to_vector(FILE *file, Vector *db)
 {
         while (fgets(lines, sizeof(lines), file)) {
