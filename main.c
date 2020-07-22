@@ -21,8 +21,9 @@
               "    list   - name format ; specify a C-Style format, to modify the ouput\n" \
               "    add    - name:value  ; creates a new name:value pair\n" \
               "    remove - id          ; remove the pair with the provided id\n" \
-              "    inc    - id          ; increases the value of the pair with the povided id\n\n" \
-              "    edit   - id:value    ; changes the value of the pair with the provided id\n\n" \
+              "    inc    - id          ; increases the value of the pair with the povided id\n" \
+              "    edit   - id:value    ; changes the value of the pair with the provided id\n" \
+              "    undo   -             : reverses the effect of the previous command\n\n" \
               "FLAGS:\n" \
               "    list --dir_as_name   ; instead of providing a name use the current dir as the name\n" \
               "NOTES:\n" \
@@ -38,19 +39,18 @@ void set_default(Vector *db);
 //REMEMBER TO CHANGE CONFIG, BEFORE EXECUTING INSTALL!
 
 //TODO for 1.0:
-// Implement the Undo command
 // see if we really need to have a default entry!
-// also see if the added free() removes the garbadge
+// the default entry is only there to not make the first run crash, if we were to display it.
+// so instead of default data, we can just check to see if there is any after the read. 
+// if it is empty we just print that message, not allowed to enter the action_execute if there is
+// no data, seems like a good idea.
+// also see if the added free() removes the garbadge, garbage may be because of the pointer assaigment in file_init
 // Real world testing
 
 //## Memory Leaks ##
-// use valgrind on (vector / util / file).
+// use valgrind on (vector / util / file).c
 
-//## Ideas / Optimisations
-//the returns in action can be used for error handling'
-//maybe add a file for error handling hmmmmm..
-//if you do error handling, add a int return type to must void functions.
-
+//LAST THINGS THEN 1.0
 //when looping through a string, instead of using strlen and for loop,
 //you can try using a for loop, and look for the null character
 
@@ -131,7 +131,7 @@ int main(int argc, const char* argv[])
         for(int i = 0; i < commands.size; i++)
         {
                 if((strcmp(commands.data[i].key,cmd) == 0) && (commands.data[i].value == arg_count)) {
-                       action_execute(i, arg, format, &db);
+                       action_execute(i, arg, format, &db, FULLPATH, BACKUP_PATH);
                        cmd_id = i;
                        action_done = true;
                        break;
@@ -146,9 +146,9 @@ int main(int argc, const char* argv[])
         }
 
         //check if we need to update the file!
-        //list            ids: 0, 1, 2
-        //add,rm,inc,edit ids: 3, 4, 5, 6
-        if(cmd_id >= 3) 
+        //list,undo       ids: 0, 1, 2, 3
+        //add,rm,inc,edit ids: 4, 5, 6, 7
+        if(cmd_id >= 4) 
         {
                 file_copy(FULLPATH, BACKUP_PATH); //Copy old file before updating
                 file_write(FULLPATH, db);
@@ -157,7 +157,7 @@ int main(int argc, const char* argv[])
         vector_destroy(&db);
         vector_destroy(&default_db);
         vector_destroy(&commands);
-
+        
         return 0;
 }
 

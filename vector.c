@@ -24,7 +24,7 @@ Dict dict_new(char key[S_SIZE], int value)
 Vector vector_new(void)
 {
         Vector vect;
-        vect.size = 0; //Acts as an index. / max size
+        vect.size = 0; //The number of elements, so index-1
         vect.capacity = INITAL_VECTOR_SIZE;
         vect.data = malloc(sizeof(Dict) * vect.capacity);
         
@@ -163,6 +163,7 @@ void vector_remove(int index, Vector *vect)
 void vector_destroy(Vector *vect)
 {
         free(vect->data);
+        vect->data = NULL;
 }
 
 bool valid_id(int index, Vector db)

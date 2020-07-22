@@ -6,13 +6,14 @@
 #include "size.h"
 #include "vector.h"
 #include "util.h"
+#include "file.h"
 #include "action.h"
 
 int padding; //makes sure all key values are lined up.
 
 //executes a function based on id, when arg is a dirname, we enter strict mode
 //strict mode only returns exact matches.
-void action_execute(int id, char arg[S_SIZE], char format[S_SIZE], Vector *db)
+void action_execute(int id, char arg[S_SIZE], char format[S_SIZE], Vector *db, char source[S_FILENAME], char backup[S_FILENAME])
 {
         padding = vector_longest_key(*db) + 1;
         switch(id)
@@ -27,17 +28,19 @@ void action_execute(int id, char arg[S_SIZE], char format[S_SIZE], Vector *db)
                         action_list_by_name(arg, format, *db);
                         break;
                 case 3:
-                        action_add(arg, db);
+                        action_undo(source, backup);
                         break;
                 case 4:
-                        action_remove(arg, db);
+                        action_add(arg, db);
                         break;
                 case 5:
-                        action_inc(arg, db);
+                        action_remove(arg, db);
                         break;
                 case 6:
-                        action_edit(arg, db);
+                        action_inc(arg, db);
                         break;
+                case 7:
+                        action_edit(arg, db);
                 default:
                         break;
         }
@@ -82,6 +85,13 @@ void action_list_by_name(char key[S_SIZE], char format[S_SIZE], Vector db)
 }
 
 //id: 3
+void action_undo(char source[S_FILENAME], char backup[S_FILENAME])
+{
+        file_copy(backup, source);
+        printf("Undo Complete!\n");
+}
+
+//id: 4
 void action_add(char key_value[S_SIZE], Vector *db)
 {
         char ** name_split = str_split(key_value, ':');
@@ -92,7 +102,7 @@ void action_add(char key_value[S_SIZE], Vector *db)
         free(name_split[0]); free(name_split[1]); free(name_split);
 }
 
-//id: 4
+//id: 5
 int action_remove(char id[S_SIZE], Vector *db)
 {
         int index = atoi(id);
@@ -108,7 +118,7 @@ int action_remove(char id[S_SIZE], Vector *db)
         return 0;
 }
 
-//id: 5
+//id: 6
 int action_inc(char id[S_SIZE], Vector *db)
 {
         int index = atoi(id);
@@ -124,7 +134,7 @@ int action_inc(char id[S_SIZE], Vector *db)
         return 0;
 }
 
-//id: 6
+//id: 7
 int action_edit(char id_value[S_SIZE], Vector *db) 
 {
         char ** split_value = str_split(id_value, ':');

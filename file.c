@@ -21,8 +21,7 @@ void file_init(char filename[S_FILENAME], Vector *db, Vector default_db)
         }
         else {
                 file_write(filename, default_db);
-                vector_destroy(db);
-                db = &default_db;   //db should now point to default_db
+                vector_add(default_db.data[0], db); //Make sure db has some data
         }
 }
 
