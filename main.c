@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 
-#include "config.h"
+#include "test_config.h" //CHANGE THIS TO config.h, before make install
 #include "size.h"
 
 #include "vector.h"
@@ -28,37 +28,41 @@
               "    list --dir_as_name   ; instead of providing a name use the current dir as the name\n" \
               "NOTES:\n" \
               "    [] means optional\n" \
-              "    no command = list\n" \
               "    flags are only useable with list\n"
 
 #define FULLPATH PATH FILENAME
 #define BACKUP_PATH PATH BACKUP
 
-void set_default(Vector *db);
-
-//REMEMBER TO CHANGE CONFIG, BEFORE EXECUTING INSTALL!
-
 //TODO for 1.0:
-// see if we really need to have a default entry!
-// the default entry is only there to not make the first run crash, if we were to display it.
-// so instead of default data, we can just check to see if there is any after the read. 
-// if it is empty we just print that message, not allowed to enter the action_execute if there is
-// no data, seems like a good idea.
-// also see if the added free() removes the garbadge, garbage may be because of the pointer assaigment in file_init
+// Change the undo to vectors!
+// Test the undo!
 // Real world testing
+// Garbage seems to be gone, check in Real world testing!
+
+// see if you can do the undo, with Vectors but you just realloc
+// so the two vectors are the same size
+// normal assaignment copy and then realloc the data space.
+// or free the data, then assaignment copy...
+// this would make it possible to undo the undo itself
+// would also make the descritption true: "reverses the effect of the previous command"
 
 //## Memory Leaks ##
 // use valgrind on (vector / util / file).c
 
-//LAST THINGS THEN 1.0
+//## Tweaks ##
 //when looping through a string, instead of using strlen and for loop,
 //you can try using a for loop, and look for the null character
 
+//Makes sure that underscores are converted to spaces, when issuing the add command.
+//Because we always convert directory underscore to spaces, meaning if there is an entry
+//saved with underscores we will not be able to search for it. atleast not with the --dir-as-name flag.
+
 //Look up exit(EXIT_FALIURE), and see if you can use it.
 
+//Look up pointer aliasing!
+
 int main(int argc, const char* argv[]) 
-{
-        
+{       
         if(argc <= 1) {
                 printf(VERSION USAGE);
                 return 0;
@@ -79,12 +83,11 @@ int main(int argc, const char* argv[])
         command_init(&commands);
         
         Vector db         = vector_new();
-        Vector default_db = vector_new();
-        set_default(&default_db);
+        Vector backup_db  = vector_new();
         
         //Read from file or create
-        file_init(FULLPATH, &db, default_db);
-        file_simple(BACKUP_PATH, default_db);
+        file_init(FULLPATH, &db);
+        file_init(BACKUP_PATH, &backup_db);
 
         //Here the garbage gets added to the multi_str_split, still don't know why,
         //it have to be something in file_init.
@@ -95,13 +98,21 @@ int main(int argc, const char* argv[])
         //if I add an item so we have 4, then both works.
         //May be a problem when there is exactly three, (or maybe less) it causes the problem but only
         //to the next multi_str_split call, strange...
-        size_t garb_size = 0;
-        char ** garb = multi_str_split("/clean/random/garbage/four", '/', &garb_size);
+        //size_t garb_size = 0;
+        //char ** garb = multi_str_split("/clean/random/garbage/four", '/', &garb_size);
         //printf("%s\n", garb[0]);
-        free_array(garb, garb_size); free(garb);
+        //free_array(garb, garb_size); free(garb);
 
         //Current Command
         strcpy(cmd, argv[1]);
+
+        //Check if db is empty, 
+        //if we have zero data in the file and we are not doing a add command
+        if(db.size == 0 && strcmp("add", cmd) != 0)
+        {
+                printf("There is no data in db.csv, add data with the add command!\n");
+                return 0;
+        }
 
         //Check if the third argument exists.
         if(argc >= 3 && strcmp("NULL", argv[2]) != 0) 
@@ -155,13 +166,7 @@ int main(int argc, const char* argv[])
         }
 
         vector_destroy(&db);
-        vector_destroy(&default_db);
         vector_destroy(&commands);
         
         return 0;
-}
-
-void set_default(Vector *db)
-{
-        vector_add(dict_new("default",0), db);
 }

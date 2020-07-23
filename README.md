@@ -93,3 +93,5 @@ use **%.s** to print any of the four variables as an empty string, so you can ex
 ex. to just get the value do: **"%.s%.s%.s%d"**  
   
 if the **format** is malformed, this will likely result in a **segmentation fault**.
+  
+if you use the flag --dir-as-name, all underscores are always replaced with spaces.

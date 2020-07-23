@@ -11,25 +11,25 @@
 
 char lines[LINESIZE];
 
-//Reads and stores it in db if the file exists, 
-//otherwise writes a file with content of deafult_db
-void file_init(char filename[S_FILENAME], Vector *db, Vector default_db)
+//Reads and stores it in db if the file exists
+//Otherwise create a empty file.
+void file_init(char filename[S_FILENAME], Vector *db)
 {
         FILE *fp = fopen(filename, "r");
         if(fp) {
                 file_to_vector(fp, db);
         }
         else {
-                file_write(filename, default_db);
-                vector_add(default_db.data[0], db); //Make sure db has some data
+                FILE *empty_file = fopen(filename, "w");
+                fclose(empty_file);
         }
 }
 
-//Writes a vector to a file if it DOES NOT EXIST.
-void file_simple(char filename[S_FILENAME], Vector default_db)
+//Writes a vector to a file if it DOES NOT EXIST, also creats the file.
+void file_simple(char filename[S_FILENAME], Vector db)
 {
         FILE *fp = fopen(filename, "r"); //r : read a file it must exist otherwise it returns NULL.
-        fp ? fclose(fp) : file_write(filename, default_db);
+        fp ? fclose(fp) : file_write(filename, db);
 }
 
 //Always creates a file and writes a vector to it, also replaces any existing file.
