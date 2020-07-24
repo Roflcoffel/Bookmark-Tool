@@ -50,10 +50,10 @@ void file_read(char filename[S_FILENAME], Vector *db)
 void file_copy(char source[S_FILENAME], char target[S_FILENAME])
 {
         FILE *fp_source = fopen(source, "r");
-        if(fp_source == NULL) return; //file not found abort.
+        if(fp_source == NULL) exit(EXIT_FAILURE); //file not found abort.
 
         FILE *fp_target = fopen(target, "w");
-        if(fp_target == NULL) return; ////file not found abort.
+        if(fp_target == NULL) exit(EXIT_FAILURE); ////file not found abort.
         //fp_target should not be able to be null, because "w" creates a file if it does not exist.
         
         char c;

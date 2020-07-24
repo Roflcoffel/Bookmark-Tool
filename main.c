@@ -14,7 +14,7 @@
 #include "file.h"
 #include "color.h"
 
-#define VERSION "Bookmark - 0.9\n"
+#define VERSION "Bookmark - 1.0\n"
 #define USAGE "Usage: bookmark [COMMAND] key[:value]\n\n" \
               "COMMANDS:\n" \
               "    list   - [name]      ; list all or a specified pair, also displays id\n" \
@@ -33,18 +33,9 @@
 #define FULLPATH PATH FILENAME
 #define BACKUP_PATH PATH BACKUP
 
-//TODO for 1.0:
-// Change the undo to vectors!
-// Test the undo!
+//TODO 1.1:
 // Real world testing
 // Garbage seems to be gone, check in Real world testing!
-
-// see if you can do the undo, with Vectors but you just realloc
-// so the two vectors are the same size
-// normal assaignment copy and then realloc the data space.
-// or free the data, then assaignment copy...
-// this would make it possible to undo the undo itself
-// would also make the descritption true: "reverses the effect of the previous command"
 
 //## Memory Leaks ##
 // use valgrind on (vector / util / file).c
@@ -53,13 +44,6 @@
 //when looping through a string, instead of using strlen and for loop,
 //you can try using a for loop, and look for the null character
 
-//Makes sure that underscores are converted to spaces, when issuing the add command.
-//Because we always convert directory underscore to spaces, meaning if there is an entry
-//saved with underscores we will not be able to search for it. atleast not with the --dir-as-name flag.
-
-//Look up exit(EXIT_FALIURE), and see if you can use it.
-
-//Look up pointer aliasing!
 
 int main(int argc, const char* argv[]) 
 {       
@@ -142,7 +126,7 @@ int main(int argc, const char* argv[])
         for(int i = 0; i < commands.size; i++)
         {
                 if((strcmp(commands.data[i].key,cmd) == 0) && (commands.data[i].value == arg_count)) {
-                       action_execute(i, arg, format, &db, FULLPATH, BACKUP_PATH);
+                       action_execute(i, arg, format, &db, backup_db);
                        cmd_id = i;
                        action_done = true;
                        break;
@@ -157,9 +141,9 @@ int main(int argc, const char* argv[])
         }
 
         //check if we need to update the file!
-        //list,undo       ids: 0, 1, 2, 3
-        //add,rm,inc,edit ids: 4, 5, 6, 7
-        if(cmd_id >= 4) 
+        //list                 ids: 0, 1, 2,
+        //add,rm,inc,edit,undo ids: 3, 4, 5, 6, 7
+        if(cmd_id >= 3) 
         {
                 file_copy(FULLPATH, BACKUP_PATH); //Copy old file before updating
                 file_write(FULLPATH, db);

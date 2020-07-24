@@ -13,7 +13,7 @@ int padding; //makes sure all key values are lined up.
 
 //executes a function based on id, when arg is a dirname, we enter strict mode
 //strict mode only returns exact matches.
-void action_execute(int id, char arg[S_SIZE], char format[S_SIZE], Vector *db, char source[S_FILENAME], char backup[S_FILENAME])
+void action_execute(int id, char arg[S_SIZE], char format[S_SIZE], Vector *db, Vector backup_db)
 {
         padding = vector_longest_key(*db) + 1;
         switch(id)
@@ -28,19 +28,20 @@ void action_execute(int id, char arg[S_SIZE], char format[S_SIZE], Vector *db, c
                         action_list_by_name(arg, format, *db);
                         break;
                 case 3:
-                        action_undo(source, backup);
-                        break;
-                case 4:
                         action_add(arg, db);
                         break;
-                case 5:
+                case 4:
                         action_remove(arg, db);
                         break;
-                case 6:
+                case 5:
                         action_inc(arg, db);
                         break;
-                case 7:
+                case 6:
                         action_edit(arg, db);
+                        break;
+                case 7:
+                        action_undo(db, backup_db);
+                        break;
                 default:
                         break;
         }
@@ -85,24 +86,20 @@ void action_list_by_name(char key[S_SIZE], char format[S_SIZE], Vector db)
 }
 
 //id: 3
-void action_undo(char source[S_FILENAME], char backup[S_FILENAME])
-{
-        file_copy(backup, source);
-        printf("Undo Complete!\n");
-}
-
-//id: 4
 void action_add(char key_value[S_SIZE], Vector *db)
 {
         char ** name_split = str_split(key_value, ':');
+
+        char_replace(name_split[0], '_', ' ');
+
         Dict pair = dict_new(name_split[0], atoi(name_split[1]));
         vector_add(pair, db);
-        printf("Added:\n    -> %s\n    -> %d\n", pair.key, pair.value);
 
+        printf("Added:\n    -> %s\n    -> %d\n", pair.key, pair.value);
         free(name_split[0]); free(name_split[1]); free(name_split);
 }
 
-//id: 5
+//id: 4
 int action_remove(char id[S_SIZE], Vector *db)
 {
         int index = atoi(id);
@@ -118,7 +115,7 @@ int action_remove(char id[S_SIZE], Vector *db)
         return 0;
 }
 
-//id: 6
+//id: 5
 int action_inc(char id[S_SIZE], Vector *db)
 {
         int index = atoi(id);
@@ -134,7 +131,7 @@ int action_inc(char id[S_SIZE], Vector *db)
         return 0;
 }
 
-//id: 7
+//id: 6
 int action_edit(char id_value[S_SIZE], Vector *db) 
 {
         char ** split_value = str_split(id_value, ':');
@@ -155,4 +152,13 @@ int action_edit(char id_value[S_SIZE], Vector *db)
         printf("Changed:\n    -> %s\n    to %d\n", db->data[index].key, db->data[index].value);
 
         return 0;
+}
+
+//id: 7
+void action_undo(Vector *db, Vector backup_db)
+{
+        *db = backup_db;
+        db->data = realloc(db->data, sizeof(Dict) * db->capacity);
+        printf("Changed to:\n");
+        action_list_all(*db);
 }
