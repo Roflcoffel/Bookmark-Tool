@@ -15,7 +15,7 @@
 #include "color.h"
 
 #define VERSION "Bookmark - 1.0\n"
-#define USAGE "Usage: bookmark [COMMAND] key[:value]\n\n" \
+#define USAGE "Usage: bookmark COMMAND [key:value]\n\n" \
               "COMMANDS:\n" \
               "    list   - [name]      ; list all or a specified pair, also displays id\n" \
               "    list   - name format ; specify a C-Style format, to modify the ouput\n" \
@@ -23,7 +23,7 @@
               "    remove - id          ; remove the pair with the provided id\n" \
               "    inc    - id          ; increases the value of the pair with the povided id\n" \
               "    edit   - id:value    ; changes the value of the pair with the provided id\n" \
-              "    undo   -             : reverses the effect of the previous command\n\n" \
+              "    undo   -             : reverses the effect of the previous command\n" \
               "FLAGS:\n" \
               "    list --dir_as_name   ; instead of providing a name use the current dir as the name\n" \
               "NOTES:\n" \
