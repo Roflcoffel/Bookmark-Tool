@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 
-#include "test_config.h" //CHANGE THIS TO config.h, before make install
+#include "config.h" //CHANGE THIS TO config.h, before make install
 #include "size.h"
 
 #include "vector.h"

@@ -32,10 +32,13 @@ adds the specified **name:value** pair to the csv file.
 removes the specified pair from the csv file.
 
 **inc** id  
-increases the **value** of the pair with the specified **id**
+increases the **value** of the pair with the specified **id**.
 
 **edit** id:value  
-changes the **value** of the pair with the specified **id**
+changes the **value** of the pair with the specified **id**.
+
+**undo**  
+reverses the effect of the previous command.
 
 ### EXAMPLES
 list all bookmarks:  
@@ -94,4 +97,5 @@ ex. to just get the value do: **"%.s%.s%.s%d"**
   
 if the **format** is malformed, this will likely result in a **segmentation fault**.
   
-if you use the flag --dir-as-name, all underscores are always replaced with spaces.
+if you use the flag --dir-as-name, all underscores are always replaced with spaces.  
+So you can use underscores in directory names.  
