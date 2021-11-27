@@ -1,0 +1,19 @@
+//BUG 1
+Adding a new serie with the value of 1, and the key in qoutation marks ("") 
+caused the program to interpret the value as 10
+
+Could not reproduce this in the test space, so need more data before making any changes.
+
+//BUG 2
+if a full match fails, and there are two series with a partial match, --dir-as-name 
+will display both of them, this means that PlayNext.sh will get the wrong number.
+
+--dir-as-name, should maybe only return one match, or add a flag.
+and maybe 2 letter match should not be enough to be considered a match.
+
+//Oversight
+Adding a serie with episode 0, will cause PlayNext.sh script to select the
+latest episode in the folder, maybe change it so when adding a serie
+without a number it will default to 1, the same with when trying to add 0,
+
+Negatives I do not know how to handle, in that case user error i guess.

@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 #include "config.h" //CHANGE THIS TO config.h, before make install
-#include "size.h"
+
 
 #include "vector.h"
 #include "command.h"
@@ -33,6 +33,8 @@
 #define FULLPATH PATH FILENAME
 #define BACKUP_PATH PATH BACKUP
 
+#define S_SIZE 255
+
 //TODO 1.1:
 // Real world testing
 // Garbage seems to be gone, check in Real world testing!
@@ -40,10 +42,11 @@
 //## Memory Leaks ##
 // use valgrind on (vector / util / file).c
 
-//## Tweaks ##
-//when looping through a string, instead of using strlen and for loop,
-//you can try using a for loop, and look for the null character
+//When we put a value into a dict, thats when we need to check if
+//it is too big.
 
+//We also need to make sure that here in main the argv are not
+//too big
 
 int main(int argc, const char* argv[]) 
 {       
@@ -99,11 +102,11 @@ int main(int argc, const char* argv[])
         }
 
         //Check if the third argument exists.
-        if(argc >= 3 && strcmp("NULL", argv[2]) != 0) 
+        if(argc >= 3 && strcmp("", argv[2]) != 0) 
                 strcpy(arg, argv[2]);
 
         //Check for the last argument.
-        if(argc >= 4 && strcmp("NULL", argv[3]) != 0)
+        if(argc >= 4 && strcmp("", argv[3]) != 0)
                 strcpy(format, argv[3]);
 
         //Check for the dir flag, and replace arg with cwd

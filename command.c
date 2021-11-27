@@ -1,6 +1,5 @@
 #include <stdbool.h>
 
-#include "size.h"
 #include "vector.h"
 #include "command.h"
 

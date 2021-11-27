@@ -4,7 +4,6 @@
 #include <assert.h>
 #include <stdbool.h>
 
-#include "../size.h"
 #include "../color.h"
 #include "../vector.h"
 #include "minunit.h"

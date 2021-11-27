@@ -4,16 +4,13 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "size.h"
 #include "vector.h"
 #include "util.h"
 #include "file.h"
 
-char lines[LINESIZE];
-
 //Reads and stores it in db if the file exists
 //Otherwise create a empty file.
-void file_init(char filename[S_FILENAME], Vector *db)
+void file_init(char filename[], Vector *db)
 {
         FILE *fp = fopen(filename, "r");
         if(fp) {
@@ -26,28 +23,28 @@ void file_init(char filename[S_FILENAME], Vector *db)
 }
 
 //Writes a vector to a file if it DOES NOT EXIST, also creats the file.
-void file_simple(char filename[S_FILENAME], Vector db)
+void file_simple(char filename[], Vector db)
 {
         FILE *fp = fopen(filename, "r"); //r : read a file it must exist otherwise it returns NULL.
         fp ? fclose(fp) : file_write(filename, db);
 }
 
 //Always creates a file and writes a vector to it, also replaces any existing file.
-void file_write(char filename[S_FILENAME], Vector db)
+void file_write(char filename[], Vector db)
 {
         FILE *fp = fopen(filename, "w"); //w : always creates a file, replaces any existing.
         fp ? vector_to_file(fp, db) : printf("Insufficent Permissions\n"); //or file not found
 }
 
 //Reads a file and save it to a vector.
-void file_read(char filename[S_FILENAME], Vector *db)
+void file_read(char filename[], Vector *db)
 {
         FILE *fp = fopen(filename, "r");
         fp ? file_to_vector(fp, db) : printf("Insufficent Permissions\n"); //or file not found
 }
 
 //Copies a soruce file to a target file.
-void file_copy(char source[S_FILENAME], char target[S_FILENAME])
+void file_copy(char source[], char target[])
 {
         FILE *fp_source = fopen(source, "r");
         if(fp_source == NULL) exit(EXIT_FAILURE); //file not found abort.
@@ -65,6 +62,8 @@ void file_copy(char source[S_FILENAME], char target[S_FILENAME])
 //READS a file and saves it to a vector
 void file_to_vector(FILE *file, Vector *db)
 {
+        char lines[LINESIZE];
+
         while (fgets(lines, sizeof(lines), file)) {
                 size_t size = 0;
                 char ** s = multi_str_split(lines, ',', &size);

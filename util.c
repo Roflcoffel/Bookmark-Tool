@@ -3,23 +3,24 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "size.h"
+
 #include "util.h"
 //Creates a substring from a string adds a null character
 //start       - array start index
 //num_of_char - number of total characters, 0 == length of "string";
 //string      - string to extract from
 //return      - a substring (a malloced bloock)
-char * substring(int start, int num_of_char, char string[S_SIZE])
-{       
-        if(start > S_SIZE) return string;
+char * substring(int start, int num_of_char, char string[])
+{
+        int len = strlen(string);
+        if(start > len) return string;
 
         num_of_char += start;
 
-        if(num_of_char-start == 0) num_of_char = strlen(string);
-        if(num_of_char > S_SIZE) num_of_char = S_SIZE-1;
+        if(num_of_char-start == 0) num_of_char = len;
+        if(num_of_char > len)      num_of_char = len-1;
 
-        char * substring = malloc(S_SIZE * sizeof(char));
+        char * substring = malloc(len * sizeof(char));
 
         for(int i = start; i < num_of_char; i++)
         {
@@ -35,13 +36,13 @@ char * substring(int start, int num_of_char, char string[S_SIZE])
 //string    - string you want to split
 //delimiter - the character to split at, if a delimter is not found returns the input in char **
 //return    - an array with two strings
-char ** str_split(char string[S_SIZE], char delimiter)
+char ** str_split(char string[], char delimiter)
 {
         char ** str = malloc(2 * sizeof(char*));
         int len = strlen(string);
 
-        str[0] = malloc(S_SIZE * sizeof(char));
-        str[1] = malloc(S_SIZE * sizeof(char));
+        str[0] = malloc(len * sizeof(char));
+        str[1] = malloc(len * sizeof(char));
 
         bool delimter_found = false;
 
@@ -73,7 +74,7 @@ char ** str_split(char string[S_SIZE], char delimiter)
 //delimiter - the character you want to split at, if the delimiter is not found returns the input in a char **
 //size      - stores the array size in this variable (output)
 //returns   - an array of strings
-char ** multi_str_split(char string[S_SIZE], char delimiter, size_t *size)
+char ** multi_str_split(char string[], char delimiter, size_t *size)
 {
         size_t len = strlen(string);
         
@@ -88,7 +89,7 @@ char ** multi_str_split(char string[S_SIZE], char delimiter, size_t *size)
 
         if(array_size == 0)
         {
-                str[0] = malloc(S_SIZE * sizeof(char));
+                str[0] = malloc(len * sizeof(char));
                 strcpy(str[0], string);
                 return str;
         }
@@ -99,7 +100,7 @@ char ** multi_str_split(char string[S_SIZE], char delimiter, size_t *size)
         {
                 if(string[i] == delimiter || i == len)
                 {
-                        str[count] = malloc(S_SIZE * sizeof(char));
+                        str[count] = malloc(len * sizeof(char));
                         char * element = substring(start,i-start,string);
                         strcpy(str[count], element);
                         start = i+1;
@@ -116,7 +117,7 @@ char ** multi_str_split(char string[S_SIZE], char delimiter, size_t *size)
 //string     - string to count delimiters in
 //delimiter  - the character you want to count
 //returns    - a count of delimiters
-int count_delimiter(char string[S_SIZE], char delimiter)
+int count_delimiter(char string[], char delimiter)
 {
         int count_delimiter = 0;
         size_t len = strlen(string);
@@ -137,7 +138,7 @@ int count_delimiter(char string[S_SIZE], char delimiter)
 //string        - the input string that will be modified
 //find          - current delimiter, will be replaced
 //replace       - the new delimiter
-void char_replace(char string[S_SIZE], char find, char replace)
+void char_replace(char string[], char find, char replace)
 {
         size_t len = strlen(string);
 

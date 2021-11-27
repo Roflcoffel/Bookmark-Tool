@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../size.h"
 #include "../color.h"
 #include "../util.h"
 #include "minunit.h"

@@ -2,10 +2,11 @@
 #define VECTOR_H_
 
 #define INITAL_VECTOR_SIZE 2
+#define MAX_KEY 255
 
 typedef struct Dict
 {
-        char key[S_SIZE];
+        char key[MAX_KEY];
         int value;
 } Dict;
 
@@ -16,13 +17,13 @@ typedef struct Vector
         int capacity;   //The maximum capacity
 } Vector;
 
-Dict dict_new(char key[S_SIZE], int value);
+Dict dict_new(char key[], int value);
 
 Vector vector_new(void);
 void vector_add(Dict dict, Vector *vect);
-Vector vector_match(char key[S_SIZE], Vector vect);
-Dict vector_find(char key[S_SIZE], Vector vect, int *index);
-int vector_find_index(char key[S_SIZE], Vector vect);
+Vector vector_match(char key[], Vector vect);
+Dict vector_find(char key[], Vector vect, int *index);
+int vector_find_index(char key[], Vector vect);
 int vector_longest_key(Vector vect);
 void vector_remove(int index, Vector *vect);
 void vector_destroy(Vector *vect);

@@ -6,12 +6,12 @@
 #include <assert.h>
 #include <stdbool.h>
 
-#include "size.h"
+
 #include "vector.h"
 #include "util.h"
 
 //Constructor
-Dict dict_new(char key[S_SIZE], int value)
+Dict dict_new(char key[], int value)
 {
         Dict new;
         strcpy(new.key, key);
@@ -50,12 +50,11 @@ void vector_add(Dict dict, Vector *vect)
 //key    - search term
 //vect   - where your search term will be used.
 //return - all item that matches the key, or matches atleast 2 letters.
-Vector vector_match(char key[S_SIZE], Vector vect)
+Vector vector_match(char key[], Vector vect)
 {       
 	Vector new_vect = vector_new();
         int matches[vect.size];
-
-        int key_len = strlen(key);
+        
         bool full_match_found = false;
 
         //Counts each matching character, and stores the number of matches.
@@ -88,7 +87,7 @@ Vector vector_match(char key[S_SIZE], Vector vect)
                 free_array(split_vect, size); free(split_vect);
         }
 
-        //Didn't find a full match, see if we any 2 letter matches.
+        //Didn't find a full match, see if we have any 2 letter matches.
         if(full_match_found == false)
         {
                 for (int i = 0; i < vect.size; i++)
@@ -106,7 +105,7 @@ Vector vector_match(char key[S_SIZE], Vector vect)
 //key     - search term, (needs to match all character)
 //vect    - where your search term will be used.
 //return  - the index of a match
-int vector_find_index(char key[S_SIZE], Vector vect)
+int vector_find_index(char key[], Vector vect)
 {
         for(int i = 0; i < vect.size; i++)
         {
@@ -123,7 +122,7 @@ int vector_find_index(char key[S_SIZE], Vector vect)
 //vect   - where your search term will be used.
 //index  - (output) also gives you the index of your search term, if found.
 //return - a dict of your match
-Dict vector_find(char key[S_SIZE], Vector vect, int *index)
+Dict vector_find(char key[], Vector vect, int *index)
 {
         *index = vector_find_index(key, vect);
         if(*index == -1)
