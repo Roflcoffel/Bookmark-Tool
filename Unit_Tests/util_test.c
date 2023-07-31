@@ -9,7 +9,7 @@
 static char * test_substring(void);
 static char * test_str_split(void);
 static char * test_multi_str_split(void);
-static char * test_count_delimiter(void);
+static char * test_get_delimiter(void);
 static char * test_char_replace(void);
 
 int tests_run = 0;
@@ -25,6 +25,9 @@ int tests_run = 0;
 #define P_EXPECTED2 "Random"
 #define P_EXPECTED3 "Place"
 #define P_EXPECTED4 "Wow"
+
+#define EXPECTED_BUFFER_0 "4"
+#define EXPECTED_BUFFER_1 "9"
 
 #define EXPECTED_COUNT "2"
 #define EXPECTED0 "TEST"
@@ -56,7 +59,9 @@ int tests_run = 0;
 
 #define MSG_test_multi_str_split_no_space "Error, test_multi_str_split no_space[0] should be "NO_SPACE
 
-#define MSG_test_count_delimiter "Error, test_count_delimiter del_count should be "EXPECTED_COUNT
+#define MSG_test_get_delimiter "Error, test_get_delimiter del_count should be "EXPECTED_COUNT
+#define MSG_test_get_delimiter_buffer_0 "Error, test_get_delimiter, buffer[0] should be "EXPECTED_BUFFER_0
+#define MSG_test_get_delimiter_buffer_1 "Error, test_get_delimiter, buffer[1] should be "EXPECTED_BUFFER_1
 
 #define MSG_test_char_replace "Error, test_char_replace string should be "EXPECTED_LONG_STRING
 
@@ -135,12 +140,17 @@ static char * test_multi_str_split()
     return 0;
 }
 
-static char * test_count_delimiter()
+static char * test_get_delimiter()
 {
-    int del_count = count_delimiter(LONG_STRING, ' ');
+    int buffer[2];
+    int del_count = get_delimiter(LONG_STRING, ' ', buffer);
 
     printf("del_count is %d from "LONG_STRING"\n", del_count);
-    mu_assert(MSG_test_count_delimiter, del_count == atoi(EXPECTED_COUNT));
+    mu_assert(MSG_test_get_delimiter, del_count == atoi(EXPECTED_COUNT));
+
+    printf("buffer[0] is %d\nbuffer[1] is %d\nbuffer[2] is %d\n", buffer[0], buffer[1]);
+    mu_assert(MSG_test_get_delimiter_buffer_0, buffer[0] == atoi(EXPECTED_BUFFER_0));
+    mu_assert(MSG_test_get_delimiter_buffer_1, buffer[1] == atoi(EXPECTED_BUFFER_1));
 
     printf("\ntest_count_delimiter ");
     print_color(GREEN, "PASSED\n\n");
@@ -166,7 +176,7 @@ static char* all_tests()
 {
     mu_run_test(test_substring);
     mu_run_test(test_str_split);
-    mu_run_test(test_count_delimiter);
+    mu_run_test(test_get_delimiter);
     mu_run_test(test_multi_str_split);
     mu_run_test(test_char_replace);
     return 0;

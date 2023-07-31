@@ -48,6 +48,8 @@
 //We also need to make sure that here in main the argv are not
 //too big
 
+//When using malloc, need to add a check if it returned a null pointer (p == NULL check).
+
 int main(int argc, const char* argv[]) 
 {       
         if(argc <= 1) {
@@ -60,7 +62,7 @@ int main(int argc, const char* argv[])
         char cwd[S_SIZE]; //Current Working Directory
 
         //Format Argument, Default value
-        char format[S_SIZE] = "%d : %-*s -> %d\n"; 
+        char format[S_SIZE] = "%d : %-*s -> %d\n";
         
         //The id for the command executed
         int cmd_id = 0;

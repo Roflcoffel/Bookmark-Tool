@@ -11,9 +11,10 @@ will display both of them, this means that PlayNext.sh will get the wrong number
 --dir-as-name, should maybe only return one match, or add a flag.
 and maybe 2 letter match should not be enough to be considered a match.
 
-//Oversight
+//Oversight 1
 Adding a serie with episode 0, will cause PlayNext.sh script to select the
 latest episode in the folder, maybe change it so when adding a serie
 without a number it will default to 1, the same with when trying to add 0,
 
-Negatives I do not know how to handle, in that case user error i guess.
+//Negative numbers.
+Is not supported and default to 1 or throws an error.

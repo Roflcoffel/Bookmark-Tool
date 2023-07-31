@@ -65,10 +65,9 @@ void file_to_vector(FILE *file, Vector *db)
         char lines[LINESIZE];
 
         while (fgets(lines, sizeof(lines), file)) {
-                size_t size = 0;
-                char ** s = multi_str_split(lines, ',', &size);
+                char ** s = str_split(lines, ',');
                 vector_add(dict_new(s[0], atoi(s[1])), db);
-                free_array(s, size); free(s);
+                free_array(s, 2);
         }
         fclose(file);
 }

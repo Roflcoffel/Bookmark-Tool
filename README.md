@@ -31,8 +31,9 @@ adds the specified **name:value** pair to the csv file.
 **remove** id  
 removes the specified pair from the csv file.
 
-**inc** id  
-increases the **value** of the pair with the specified **id**.
+**inc** [id]  
+increases the **value** of the pair with the specified **id**, if **id** is not specified
+all values in the db will be increased.
 
 **edit** id:value  
 changes the **value** of the pair with the specified **id**.
@@ -98,4 +99,13 @@ ex. to just get the value do: **"%.s%.s%.s%d"**
 if the **format** is malformed, this will likely result in a **segmentation fault**.
   
 if you use the flag --dir-as-name, all underscores are always replaced with spaces.  
-So you can use underscores in directory names.  
+So you can use underscores in directory names.
+
+### BUILD
+clone this project, and run make:
+
+	git clone git@github.com:Roflcoffel/Bookmark-Tool.git
+	cd bookmark-tool
+	make
+
+this will create an executable file inside the bookmark-tool directory.

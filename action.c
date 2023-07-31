@@ -42,7 +42,11 @@ void action_execute(int id, char arg[], char format[], Vector *db, Vector backup
                 case 7:
                         action_undo(db, backup_db);
                         break;
+                case 8:
+                        action_inc_all(db);
+                        break;
                 default:
+                        printf("CASE IS NOT ADDED!!");
                         break;
         }
 }
@@ -161,4 +165,15 @@ void action_undo(Vector *db, Vector backup_db)
         db->data = realloc(db->data, sizeof(Dict) * db->capacity);
         printf("Changed to:\n");
         action_list_all(*db);
+}
+
+//id: 8
+void action_inc_all(Vector *db)
+{
+        for (int i = 0; i < db->size; i++)
+        {
+                vector_inc(i, db);
+               
+        }
+        printf("Increased all db values by 1\n");
 }
